@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS - Test &lt;vcl-checkbox&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #3182ce;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: #1a202c;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 24px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-title { margin: 0; font-size: 24px; font-weight: 700; }
+        .hero-subtitle { margin: 6px 0 0 0; color: #94a3b8; font-size: 14px; }
+
+        .test-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .test-card-title {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .console-container {
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+            margin-top: 24px;
+        }
+
+        .console-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .console-body {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #38bdf8;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .log-entry { margin: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+        .log-timestamp { color: #64748b; margin-right: 8px; }
+        .log-tag { color: #f472b6; font-weight: 600; }
+        .log-val { color: #4ade80; }
+
+        .btn-action {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-right: 8px;
+        }
+        .btn-action:hover { background: #edf2f7; }
+    </style>
+</head>
+<body>
+
+    <!-- REGLA DE ORO VCL: Todo componente VCL se monta dentro de un <vcl-page> como padre ancestro obligatorio -->
+    <vcl-page title="Prueba de Componente Migrado - <vcl-checkbox>">
+
+        <div class="hero-banner">
+            <h1 class="hero-title">✅ Prueba de Componente: &lt;vcl-checkbox&gt;</h1>
+            <p class="hero-subtitle">Migración directa de <code>TCheckBox</code> a Custom Element nativo con Shadow DOM encapsulado (0% JQuery).</p>
+        </div>
+
+        <div class="test-card">
+            <h2 class="test-card-title">1. Galería de Estados de &lt;vcl-checkbox&gt;</h2>
+            
+            <div class="checkbox-group">
+                <vcl-checkbox id="chk-1" text="Aceptar Términos y Condiciones de Uso"></vcl-checkbox>
+                <vcl-checkbox id="chk-2" text="Recibir notificaciones por correo electrónico" checked></vcl-checkbox>
+                <vcl-checkbox id="chk-3" text="Recordar esta sesión en este dispositivo" checked></vcl-checkbox>
+                <vcl-checkbox id="chk-disabled" text="Opción Deshabilitada (ReadOnly)" disabled></vcl-checkbox>
+                <vcl-checkbox id="chk-disabled-checked" text="Opción Deshabilitada y Marcada" checked disabled></vcl-checkbox>
+            </div>
+
+            <div style="margin-top: 24px; pt-16; border-top: 1px dashed var(--border-color); padding-top: 16px;">
+                <button class="btn-action" id="btn-toggle-chk2">Alternar Marcado (JS)</button>
+                <button class="btn-action" id="btn-toggle-disabled">Alternar Deshabilitado (JS)</button>
+            </div>
+        </div>
+
+        <!-- Integración con componentes ya migrados para demostración -->
+        <vcl-panel header-title="Integración con Componentes Migrados Previos" panel-style="primary">
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <vcl-label text="Estado del Checkbox:" label-style="info"></vcl-label>
+                <vcl-badge id="badge-status" text="No Aceptado" badge-style="warning"></vcl-badge>
+                <vcl-button id="btn-submit" text="Confirmar Selección" button-style="success"></vcl-button>
+            </div>
+        </vcl-panel>
+
+        <!-- Consola de Eventos Personalizada -->
+        <div class="console-container">
+            <div class="console-header">
+                <div>MONITOR DE EVENTOS NATIVOS — &lt;vcl-checkbox&gt;</div>
+                <button class="btn-action" id="btn-clear" style="padding: 2px 8px; font-size: 11px;">Limpiar</button>
+            </div>
+            <div class="console-body" id="console-log">
+                <div class="log-entry"><span class="log-timestamp">[SYS]</span> Escuchando eventos 'vcl-change' de &lt;vcl-checkbox&gt;...</div>
+            </div>
+        </div>
+
+    </vcl-page>
+
+    <script type="module">
+        import '/web-components/index.ts';
+
+        const consoleLog = document.getElementById('console-log');
+        const badgeStatus = document.getElementById('badge-status');
+
+        function logEvent(tag, detail) {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-timestamp">[${time}]</span> <span class="log-tag">vcl-change</span> de &lt;${tag}&gt;: checked=<span class="log-val">${detail.checked}</span>, text="<span class="log-val">${detail.value}</span>"`;
+            consoleLog.prepend(entry);
+        }
+
+        // Event listener nativo para vcl-checkbox
+        document.addEventListener('vcl-change', (e) => {
+            if (e.target.tagName.toLowerCase() === 'vcl-checkbox') {
+                logEvent('vcl-checkbox', e.detail);
+
+                // Actualizar badge integrado para demostrar interacción
+                if (e.target.id === 'chk-1') {
+                    if (e.detail.checked) {
+                        badgeStatus.setAttribute('text', 'Términos Aceptados');
+                        badgeStatus.setAttribute('badge-style', 'success');
+                    } else {
+                        badgeStatus.setAttribute('text', 'No Aceptado');
+                        badgeStatus.setAttribute('badge-style', 'warning');
+                    }
+                }
+            }
+        });
+
+        // Event listeners para botones interactivos
+        document.getElementById('btn-toggle-chk2').addEventListener('click', () => {
+            const chk2 = document.getElementById('chk-2');
+            chk2.checked = !chk2.checked;
+        });
+
+        document.getElementById('btn-toggle-disabled').addEventListener('click', () => {
+            const chk1 = document.getElementById('chk-1');
+            if (chk1.hasAttribute('disabled')) chk1.removeAttribute('disabled');
+            else chk1.setAttribute('disabled', '');
+        });
+
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            consoleLog.innerHTML = '<div class="log-entry"><span class="log-timestamp">[SYS]</span> Consola reiniciada.</div>';
+        });
+    </script>
+</body>
+</html>

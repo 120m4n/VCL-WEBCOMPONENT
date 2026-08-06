@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS - Test &lt;vcl-toolbar&gt; &amp; &lt;vcl-toolbutton&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #3182ce;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: #1a202c;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 24px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-title { margin: 0; font-size: 24px; font-weight: 700; }
+        .hero-subtitle { margin: 6px 0 0 0; color: #94a3b8; font-size: 14px; }
+
+        .test-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .test-card-title {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-right: 8px;
+            margin-top: 8px;
+        }
+        .btn-action:hover { background: #edf2f7; }
+
+        .console-container {
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+            margin-top: 24px;
+        }
+
+        .console-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .console-body {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #38bdf8;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        /* Mini-App Specific Styles */
+        .app-container {
+            border: 1px solid #cbd5e0;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.25s ease;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .app-title-area {
+            font-weight: 600;
+            font-size: 15px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .app-editor-wrapper {
+            padding: 16px;
+        }
+
+        .app-editor-canvas {
+            min-height: 180px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            color: #1e293b;
+            font-size: 14px;
+            line-height: 1.6;
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .app-editor-canvas:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+        }
+
+        .app-editor-canvas.dark-mode {
+            background-color: #0f172a;
+            color: #f8fafc;
+            border-color: #334155;
+        }
+
+        .app-status-bar {
+            padding: 8px 16px;
+            background: #f1f5f9;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <vcl-page title="Prueba <vcl-toolbar> & <vcl-toolbutton>">
+
+        <div class="hero-banner">
+            <h1 class="hero-title">🛠️ Componentes: &lt;vcl-toolbar&gt; &amp; &lt;vcl-toolbutton&gt;</h1>
+            <p class="hero-subtitle">
+                Migración de <code>TToolBar</code> y <code>TToolButton</code> de Delphi (<code>comctrls.pas</code>). Soporta los estilos <strong>tbsButton</strong>, <strong>tbsCheck</strong>, <strong>tbsDivider</strong>, <strong>tbsSeparator</strong> y <strong>tbsDropDown</strong>.
+            </p>
+        </div>
+
+        <!-- Section 1: Mini-App Editor Application -->
+        <div class="test-card" style="border: 2px solid #3182ce;">
+            <h2 class="test-card-title" style="color: #2b6cb0;">🚀 1. Mini-Aplicación Funcional: Editor de Notas VCL</h2>
+            <p style="font-size:14px; color:#4a5568; margin-bottom:16px;">
+                Aplicación interactiva que utiliza la barra de herramientas <code>&lt;vcl-toolbar&gt;</code> para controlar el formato en tiempo real, alineación de texto, guardado de documentos y cambio de temas.
+            </p>
+
+            <div class="app-container" id="app-workspace">
+                <!-- Header Status -->
+                <div class="app-header">
+                    <div class="app-title-area">
+                        <span>📝 VCL NotePad Pro</span>
+                    </div>
+                    <div class="app-badges">
+                        <vcl-badge id="app-status-badge" text="Estado: Modificado" badge-style="warning"></vcl-badge>
+                        <vcl-badge id="app-counter-badge" text="0 caract." badge-style="info"></vcl-badge>
+                    </div>
+                </div>
+
+                <!-- Main Interactive Toolbar -->
+                <vcl-toolbar id="app-toolbar" show-captions list style="border-radius:0; border-left:none; border-right:none;">
+                    <!-- File Actions -->
+                    <vcl-toolbutton id="app-btn-new" icon="📄" caption="Nuevo" style="tbsButton"></vcl-toolbutton>
+                    <vcl-toolbutton id="app-btn-sample" icon="✨" caption="Ejemplo" style="tbsButton"></vcl-toolbutton>
+                    <vcl-toolbutton id="app-btn-save" icon="💾" caption="Guardar" style="tbsButton"></vcl-toolbutton>
+
+                    <vcl-toolbutton style="tbsDivider"></vcl-toolbutton>
+
+                    <!-- Formatting Options (tbsCheck) -->
+                    <vcl-toolbutton id="app-chk-bold" icon="<b>B</b>" caption="Negrita" style="tbsCheck"></vcl-toolbutton>
+                    <vcl-toolbutton id="app-chk-italic" icon="<i>I</i>" caption="Cursiva" style="tbsCheck"></vcl-toolbutton>
+                    <vcl-toolbutton id="app-chk-underline" icon="<u>U</u>" caption="Subrayado" style="tbsCheck"></vcl-toolbutton>
+
+                    <vcl-toolbutton style="tbsDivider"></vcl-toolbutton>
+
+                    <!-- Text Alignment Group (tbsCheck grouped) -->
+                    <vcl-toolbutton id="app-align-left" icon="⬅️" caption="Izquierda" style="tbsCheck" grouped group-id="app-align" down></vcl-toolbutton>
+                    <vcl-toolbutton id="app-align-center" icon="↔️" caption="Centro" style="tbsCheck" grouped group-id="app-align"></vcl-toolbutton>
+                    <vcl-toolbutton id="app-align-right" icon="➡️" caption="Derecha" style="tbsCheck" grouped group-id="app-align"></vcl-toolbutton>
+                    <vcl-toolbutton id="app-align-justify" icon="☰" caption="Justificado" style="tbsCheck" grouped group-id="app-align"></vcl-toolbutton>
+
+                    <vcl-toolbutton style="tbsDivider"></vcl-toolbutton>
+
+                    <!-- Theme Toggle Group (tbsCheck grouped) -->
+                    <vcl-toolbutton id="app-theme-light" icon="☀️" caption="Claro" style="tbsCheck" grouped group-id="app-theme" down></vcl-toolbutton>
+                    <vcl-toolbutton id="app-theme-dark" icon="🌙" caption="Oscuro" style="tbsCheck" grouped group-id="app-theme"></vcl-toolbutton>
+
+                    <vcl-toolbutton style="tbsSeparator"></vcl-toolbutton>
+
+                    <!-- Export Dropdown -->
+                    <vcl-toolbutton id="app-btn-export" icon="📦" caption="Exportar" style="tbsDropDown"></vcl-toolbutton>
+                </vcl-toolbar>
+
+                <!-- Editor Body -->
+                <div class="app-editor-wrapper">
+                    <div id="app-editor" class="app-editor-canvas" contenteditable="true" spellcheck="false">
+                        Escribe aquí tu nota... Utiliza los botones de la barra de herramientas de arriba para cambiar el formato en tiempo real.
+                    </div>
+                </div>
+
+                <!-- Status Bar -->
+                <div class="app-status-bar">
+                    <span id="app-save-time">Último guardado: No guardado aún</span>
+                    <span>VCL.JS Web Component Engine v2.0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Standard Toolbar Showcase -->
+        <div class="test-card">
+            <h2 class="test-card-title">2. Demostración de Variantes y Modos de Toolbar</h2>
+            <p style="font-size:14px; color:#4a5568;">
+                Demostración de botones de acción simple, líneas divisorias (<code>tbsDivider</code>), espacios separadores (<code>tbsSeparator</code>) y menú desplegable (<code>tbsDropDown</code>).
+            </p>
+
+            <vcl-toolbar id="tb-main" show-captions list>
+                <vcl-toolbutton id="tb-new" icon="📄" caption="Nuevo" style="tbsButton"></vcl-toolbutton>
+                <vcl-toolbutton id="tb-open" icon="📂" caption="Abrir" style="tbsButton"></vcl-toolbutton>
+                <vcl-toolbutton id="tb-save" icon="💾" caption="Guardar" style="tbsButton"></vcl-toolbutton>
+
+                <vcl-toolbutton style="tbsDivider"></vcl-toolbutton>
+
+                <vcl-toolbutton id="tb-cut" icon="✂️" caption="Cortar" style="tbsButton"></vcl-toolbutton>
+                <vcl-toolbutton id="tb-copy" icon="📋" caption="Copiar" style="tbsButton"></vcl-toolbutton>
+                <vcl-toolbutton id="tb-paste" icon="📌" caption="Pegar" style="tbsButton"></vcl-toolbutton>
+
+                <vcl-toolbutton style="tbsSeparator"></vcl-toolbutton>
+
+                <vcl-toolbutton id="tb-export" icon="🚀" caption="Exportar" style="tbsDropDown"></vcl-toolbutton>
+                <vcl-toolbutton id="tb-print" icon="🖨️" caption="Imprimir" style="tbsButton" disabled></vcl-toolbutton>
+            </vcl-toolbar>
+
+            <div class="controls-row">
+                <button class="btn-action" id="btn-toggle-flat">Alternar Modo Plano (flat)</button>
+                <button class="btn-action" id="btn-toggle-captions">Alternar Texto (show-captions)</button>
+                <button class="btn-action" id="btn-toggle-list">Alternar Disposición (list / stacked)</button>
+                <button class="btn-action" id="btn-toggle-disabled">Inhabilitar Toolbar</button>
+                <button class="btn-action" id="btn-toggle-new-disabled">Inhabilitar Botón 'Nuevo'</button>
+            </div>
+        </div>
+
+        <!-- Section 3: Vertical Toolbar -->
+        <div class="test-card">
+            <h2 class="test-card-title">3. Barra de Herramientas Vertical (orientation="vertical")</h2>
+            <p style="font-size:14px; color:#4a5568;">
+                Barra lateral vertical con divisores horizontales.
+            </p>
+
+            <div style="display: flex; gap: 20px;">
+                <vcl-toolbar id="tb-vertical" orientation="vertical" show-captions list>
+                    <vcl-toolbutton id="v-pointer" icon="↖️" caption="Puntero" style="tbsCheck" grouped group-id="v-tools" down></vcl-toolbutton>
+                    <vcl-toolbutton id="v-pencil" icon="✏️" caption="Lápiz" style="tbsCheck" grouped group-id="v-tools"></vcl-toolbutton>
+                    <vcl-toolbutton id="v-eraser" icon="🧹" caption="Borrador" style="tbsCheck" grouped group-id="v-tools"></vcl-toolbutton>
+
+                    <vcl-toolbutton style="tbsSeparator"></vcl-toolbutton>
+                    <vcl-toolbutton style="tbsDivider"></vcl-toolbutton>
+                    <vcl-toolbutton style="tbsSeparator"></vcl-toolbutton>
+
+                    <vcl-toolbutton id="v-zoom-in" icon="🔍" caption="Acercar" style="tbsButton"></vcl-toolbutton>
+                    <vcl-toolbutton id="v-zoom-out" icon="🔎" caption="Alejar" style="tbsButton"></vcl-toolbutton>
+                </vcl-toolbar>
+
+                <div style="flex:1; padding:16px; background:#f1f5f9; border-radius:8px; border:1px dashed #cbd5e0; font-size:14px; color:#475569;">
+                    Área de trabajo vinculada a la barra de herramientas vertical. Haz clic en las herramientas para alternar selecciones.
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Basic Style Default ToolButtons (No Text, No Icon - Delphi Default) -->
+        <div class="test-card">
+            <h2 class="test-card-title">4. Botones Básicos Sin Texto ni Icono (Basic Style - Delphi Default)</h2>
+            <p style="font-size:14px; color:#4a5568;">
+                Demostración de botones predeterminados vacíos <code>&lt;vcl-toolbutton&gt;&lt;/vcl-toolbutton&gt;</code> sin texto ni icono, tal como se modelan en la VCL de Delphi por defecto (Basic Style con dimensiones estándar de caja de botón).
+            </p>
+
+            <vcl-toolbar id="tb-basic" basic>
+                <vcl-toolbutton id="btn-basic-1"></vcl-toolbutton>
+                <vcl-toolbutton id="btn-basic-2"></vcl-toolbutton>
+                <vcl-toolbutton style="tbsDivider"></vcl-toolbutton>
+                <vcl-toolbutton id="btn-basic-3"></vcl-toolbutton>
+                <vcl-toolbutton id="btn-basic-4"></vcl-toolbutton>
+                <vcl-toolbutton style="tbsDivider"></vcl-toolbutton>
+                <vcl-toolbutton id="btn-basic-5" style="tbsCheck" down></vcl-toolbutton>
+            </vcl-toolbar>
+        </div>
+
+        <!-- Section 5: Anti-Crowding & Container Queries Responsive Test -->
+        <div class="test-card" style="border: 2px solid #38a169;">
+            <h2 class="test-card-title" style="color: #276749;">🛡️ 5. Sistema Anti-Aglomeración y Container Queries (Test Redimensionable)</h2>
+            <p style="font-size:14px; color:#4a5568;">
+                Mueve el control deslizante para reducir el ancho del contenedor. Observa cómo las etiquetas de texto <strong>colapsan automáticamente a Modo Solo-Iconos</strong> sin solapar ni aplastar texto.
+            </p>
+
+            <div style="margin-bottom: 12px; display: flex; align-items: center; gap: 12px;">
+                <label for="width-slider" style="font-weight: 600; font-size: 13px;">Ancho del Contenedor:</label>
+                <input type="range" id="width-slider" min="320" max="1000" value="1000" style="flex:1; cursor:pointer;" />
+                <span id="width-display" style="font-family:'JetBrains Mono', monospace; font-weight:600; color:#38a169;">1000px</span>
+            </div>
+
+            <div id="resizable-box" style="width: 100%; border: 2px dashed #38a169; padding: 12px; border-radius: 8px; background: #f0fff4; transition: width 0.1s ease; box-sizing: border-box;">
+                <vcl-toolbar id="tb-responsive" show-captions list>
+                    <vcl-toolbutton icon="📄" caption="Nuevo" style="tbsButton"></vcl-toolbutton>
+                    <vcl-toolbutton icon="📂" caption="Abrir" style="tbsButton"></vcl-toolbutton>
+                    <vcl-toolbutton icon="💾" caption="Guardar" style="tbsButton"></vcl-toolbutton>
+                    <vcl-toolbutton style="tbsDivider"></vcl-toolbutton>
+                    <vcl-toolbutton icon="<b>B</b>" caption="Negrita" style="tbsCheck" down></vcl-toolbutton>
+                    <vcl-toolbutton icon="<i>I</i>" caption="Cursiva" style="tbsCheck"></vcl-toolbutton>
+                    <vcl-toolbutton style="tbsDivider"></vcl-toolbutton>
+                    <vcl-toolbutton icon="⬅️" caption="Izquierda" style="tbsCheck" grouped group-id="res-align" down></vcl-toolbutton>
+                    <vcl-toolbutton icon="↔️" caption="Centro" style="tbsCheck" grouped group-id="res-align"></vcl-toolbutton>
+                    <vcl-toolbutton icon="➡️" caption="Derecha" style="tbsCheck" grouped group-id="res-align"></vcl-toolbutton>
+                    <vcl-toolbutton style="tbsSeparator"></vcl-toolbutton>
+                    <vcl-toolbutton icon="📦" caption="Exportar" style="tbsDropDown"></vcl-toolbutton>
+                </vcl-toolbar>
+            </div>
+        </div>
+
+        <!-- Event Monitor Console -->
+        <div class="console-container">
+            <div class="console-header">
+                <div>MONITOR DE EVENTOS VCL-CLICK Y VCL-CHANGE</div>
+            </div>
+            <div class="console-body" id="console-log">
+                <div>[SYS] Monitoreando interacciones en &lt;vcl-toolbar&gt; y &lt;vcl-toolbutton&gt;...</div>
+            </div>
+        </div>
+
+    </vcl-page>
+
+    <script type="module">
+        import '/web-components/index.ts';
+
+        const consoleLog = document.getElementById('console-log');
+        const tbMain = document.getElementById('tb-main');
+
+        function appendLog(msg) {
+            const time = new Date().toLocaleTimeString();
+            consoleLog.innerHTML = `<div>[${time}] ${msg}</div>` + consoleLog.innerHTML;
+        }
+
+        // Slider listener for Section 5 Anti-Crowding test
+        const widthSlider = document.getElementById('width-slider');
+        const resizableBox = document.getElementById('resizable-box');
+        const widthDisplay = document.getElementById('width-display');
+
+        if (widthSlider && resizableBox && widthDisplay) {
+            widthSlider.addEventListener('input', (e) => {
+                const val = e.target.value;
+                resizableBox.style.width = `${val}px`;
+                widthDisplay.textContent = `${val}px`;
+            });
+        }
+
+        // ==========================================
+        // MINI-APLICACIÓN: EDITOR DE NOTAS INTERACTIVO
+        // ==========================================
+        const appEditor = document.getElementById('app-editor');
+        const appStatusBadge = document.getElementById('app-status-badge');
+        const appCounterBadge = document.getElementById('app-counter-badge');
+        const appSaveTime = document.getElementById('app-save-time');
+
+        function updateEditorMetrics() {
+            const text = appEditor.textContent || '';
+            const charCount = text.trim().length;
+            const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+            appCounterBadge.setAttribute('text', `${charCount} caract. | ${wordCount} pal.`);
+        }
+
+        appEditor.addEventListener('input', () => {
+            appStatusBadge.setAttribute('text', 'Estado: Modificado');
+            appStatusBadge.setAttribute('badge-style', 'warning');
+            updateEditorMetrics();
+        });
+
+        // Formato Negrita, Cursiva, Subrayado
+        document.getElementById('app-chk-bold').addEventListener('vcl-change', (e) => {
+            appEditor.style.fontWeight = e.detail.down ? 'bold' : 'normal';
+        });
+
+        document.getElementById('app-chk-italic').addEventListener('vcl-change', (e) => {
+            appEditor.style.fontStyle = e.detail.down ? 'italic' : 'normal';
+        });
+
+        document.getElementById('app-chk-underline').addEventListener('vcl-change', (e) => {
+            appEditor.style.textDecoration = e.detail.down ? 'underline' : 'none';
+        });
+
+        // Alineaciones (Grouped Radio Behavior)
+        document.getElementById('app-align-left').addEventListener('vcl-change', (e) => {
+            if (e.detail.down) appEditor.style.textAlign = 'left';
+        });
+        document.getElementById('app-align-center').addEventListener('vcl-change', (e) => {
+            if (e.detail.down) appEditor.style.textAlign = 'center';
+        });
+        document.getElementById('app-align-right').addEventListener('vcl-change', (e) => {
+            if (e.detail.down) appEditor.style.textAlign = 'right';
+        });
+        document.getElementById('app-align-justify').addEventListener('vcl-change', (e) => {
+            if (e.detail.down) appEditor.style.textAlign = 'justify';
+        });
+
+        // Cambio de Tema Claro / Oscuro
+        document.getElementById('app-theme-light').addEventListener('vcl-change', (e) => {
+            if (e.detail.down) {
+                appEditor.classList.remove('dark-mode');
+            }
+        });
+        document.getElementById('app-theme-dark').addEventListener('vcl-change', (e) => {
+            if (e.detail.down) {
+                appEditor.classList.add('dark-mode');
+            }
+        });
+
+        // Acciones de Botones (Nuevo, Ejemplo, Guardar)
+        document.getElementById('app-btn-new').addEventListener('vcl-click', () => {
+            appEditor.innerHTML = '';
+            appStatusBadge.setAttribute('text', 'Estado: En Blanco');
+            appStatusBadge.setAttribute('badge-style', 'info');
+            updateEditorMetrics();
+            appendLog('📄 Documento limpiado (Acción Nuevo)');
+        });
+
+        document.getElementById('app-btn-sample').addEventListener('vcl-click', () => {
+            appEditor.innerHTML = `Bienvenido al <b>Editor VCL NotePad Pro</b>.<br>Esta mini-aplicación demuestra la integración de los componentes <code>&lt;vcl-toolbar&gt;</code> y <code>&lt;vcl-toolbutton&gt;</code> en un entorno funcional completo.`;
+            appStatusBadge.setAttribute('text', 'Estado: Ejemplo Cargado');
+            appStatusBadge.setAttribute('badge-style', 'info');
+            updateEditorMetrics();
+            appendLog('✨ Texto de ejemplo cargado');
+        });
+
+        document.getElementById('app-btn-save').addEventListener('vcl-click', () => {
+            const now = new Date().toLocaleTimeString();
+            appStatusBadge.setAttribute('text', 'Estado: Guardado');
+            appStatusBadge.setAttribute('badge-style', 'success');
+            appSaveTime.textContent = `Último guardado: ${now}`;
+            appendLog(`💾 Nota guardada con éxito a las ${now}`);
+        });
+
+        document.getElementById('app-btn-export').addEventListener('vcl-click', () => {
+            appendLog('📦 Menú de exportación activado (Dropdown)');
+        });
+
+        // Inicializar métricas
+        updateEditorMetrics();
+
+        // ==========================================
+        // CONFIGURACIONES Y EVENTOS DEL TESTBED
+        // ==========================================
+        document.getElementById('btn-toggle-flat').addEventListener('click', () => {
+            tbMain.flat = !tbMain.flat;
+            appendLog(`Atributo flat de <vcl-toolbar>: ${tbMain.flat}`);
+        });
+
+        document.getElementById('btn-toggle-captions').addEventListener('click', () => {
+            tbMain.showCaptions = !tbMain.showCaptions;
+            appendLog(`Atributo show-captions de <vcl-toolbar>: ${tbMain.showCaptions}`);
+        });
+
+        document.getElementById('btn-toggle-list').addEventListener('click', () => {
+            tbMain.list = !tbMain.list;
+            appendLog(`Atributo list de <vcl-toolbar>: ${tbMain.list}`);
+        });
+
+        document.getElementById('btn-toggle-disabled').addEventListener('click', () => {
+            tbMain.disabled = !tbMain.disabled;
+            appendLog(`Atributo disabled de <vcl-toolbar>: ${tbMain.disabled}`);
+        });
+
+        document.getElementById('btn-toggle-new-disabled').addEventListener('click', () => {
+            const btnNew = document.getElementById('tb-new');
+            btnNew.disabled = !btnNew.disabled;
+            appendLog(`Atributo disabled de <vcl-toolbutton id="tb-new">: ${btnNew.disabled}`);
+        });
+
+        // Monitoring log
+        document.addEventListener('vcl-click', (e) => {
+            const btn = e.detail?.button;
+            if (btn && btn.tagName.toLowerCase() === 'vcl-toolbutton' && !btn.id.startsWith('app-')) {
+                appendLog(`[EVENT vcl-click] ID: '${btn.id || 'N/A'}', Caption: '${btn.caption}', Style: '${e.detail.style}', Down: ${e.detail.down}`);
+            }
+        });
+
+        document.addEventListener('vcl-change', (e) => {
+            const btn = e.detail?.button;
+            if (btn && btn.tagName.toLowerCase() === 'vcl-toolbutton' && !btn.id.startsWith('app-')) {
+                appendLog(`[EVENT vcl-change] ID: '${btn.id || 'N/A'}', Caption: '${btn.caption}', Style: '${e.detail.style}', Down: ${e.detail.down}, GroupID: '${e.detail.groupId || 'none'}'`);
+            }
+        });
+    </script>
+</body>
+</html>

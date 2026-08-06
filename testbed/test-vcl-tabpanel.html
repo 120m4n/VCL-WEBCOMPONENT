@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>VCL.JS - Test &lt;vcl-tabpanel&gt;</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: #f8fafc; color: #1a202c; }
+        .hero-banner { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; padding: 24px 32px; border-radius: 12px; margin-bottom: 24px; }
+        .test-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; }
+    </style>
+</head>
+<body>
+    <vcl-page title="Prueba &lt;vcl-tabpanel&gt;">
+        <div class="hero-banner">
+            <h1 style="margin:0;">📑 Componente: &lt;vcl-tabpanel&gt;</h1>
+            <p style="margin:6px 0 0 0; color:#94a3b8;">Migración de TTabPanel a Custom Element (0% JQuery).</p>
+        </div>
+
+        <div class="test-card">
+            <vcl-tabpanel>
+                <vcl-tabsheet tab-title="Perfil" active>
+                    <p style="margin:0;">Contenido de la pestaña Perfil.</p>
+                </vcl-tabsheet>
+                <vcl-tabsheet tab-title="Seguridad">
+                    <p style="margin:0;">Contenido de la pestaña Seguridad.</p>
+                </vcl-tabsheet>
+                <vcl-tabsheet tab-title="Notificaciones">
+                    <p style="margin:0;">Contenido de la pestaña Notificaciones.</p>
+                </vcl-tabsheet>
+            </vcl-tabpanel>
+        </div>
+    </vcl-page>
+
+    <script type="module">
+        import '/web-components/index.ts';
+    </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS - Test &lt;vcl-well&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #3182ce;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: #1a202c;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 24px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-title { margin: 0; font-size: 24px; font-weight: 700; }
+        .hero-subtitle { margin: 6px 0 0 0; color: #94a3b8; font-size: 14px; }
+
+        .test-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .test-card-title {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-right: 8px;
+            margin-top: 8px;
+        }
+        .btn-action:hover { background: #edf2f7; }
+
+        .console-container {
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+            margin-top: 24px;
+        }
+
+        .console-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .console-body {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #38bdf8;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- REGLA DE ORO VCL: Todo componente VCL se monta dentro de un <vcl-page> como padre ancestro obligatorio -->
+    <vcl-page title="Prueba <vcl-well> (Callout Container)">
+
+        <div class="hero-banner">
+            <h1 class="hero-title">🕳️ Componente: &lt;vcl-well&gt; (Contenedor Remarcado)</h1>
+            <p class="hero-subtitle">
+                Migración de <code>TWell</code> a Custom Element. Proporciona un marco/receptáculo remarcado e incrustado (inset card) para agrupar otros controles UI.
+            </p>
+        </div>
+
+        <div class="test-card">
+            <h2 class="test-card-title">1. Demostración de Funcionalidad y Agrupación de Controles</h2>
+            <p style="font-size:14px; color:#4a5568;">
+                El componente <code>&lt;vcl-well&gt;</code> actúa como un contenedor visual (estilo Inset Box) para destacar tarjetas de comandos o grupos de campos:
+            </p>
+
+            <!-- Well 1: Interactivo con Controles Hijos Integrados -->
+            <vcl-well id="demo-well-1" well-style="primary">
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <vcl-label text="Resumen de Acción Requerida:" label-style="info"></vcl-label>
+                    <vcl-input placeholder="Ingrese el motivo de la operación..."></vcl-input>
+                    <div style="display:flex; gap:8px;">
+                        <vcl-button text="Procesar Datos" button-style="success" id="btn-well-action"></vcl-button>
+                        <vcl-badge text="Estado: Listo" badge-style="info"></vcl-badge>
+                    </div>
+                </div>
+            </vcl-well>
+
+            <!-- Acciones Interactivas para probar TWell -->
+            <div style="margin-top:16px; padding-top:16px; border-top:1px dashed var(--border-color);">
+                <button class="btn-action" id="btn-change-color">Cambiar Color de Fondo (JS)</button>
+                <button class="btn-action" id="btn-toggle-size">Alternar Tamaño (Small / Large)</button>
+                <button class="btn-action" id="btn-style-success">Estilo Éxito (Success)</button>
+                <button class="btn-action" id="btn-style-danger">Estilo Alerta (Danger)</button>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h2 class="test-card-title">2. Variantes de Estilos Preset</h2>
+            <vcl-well well-style="success">
+                <strong>Well Estilo Éxito:</strong> Utilizado para destacar confirmaciones o resúmenes aprobados.
+            </vcl-well>
+
+            <vcl-well well-style="warning">
+                <strong>Well Estilo Advertencia:</strong> Utilizado para avisos previos o recordatorios.
+            </vcl-well>
+
+            <vcl-well well-style="danger">
+                <strong>Well Estilo Alerta:</strong> Utilizado para llamadas de atención críticas.
+            </vcl-well>
+        </div>
+
+        <div class="console-container">
+            <div class="console-header">
+                <div>MONITOR DE EVENTOS Y CAMBIOS EN &lt;vcl-well&gt;</div>
+            </div>
+            <div class="console-body" id="console-log">
+                <div>[SYS] Monitoreando interacciones en el contenedor &lt;vcl-well&gt;...</div>
+            </div>
+        </div>
+
+    </vcl-page>
+
+    <script type="module">
+        import '/web-components/index.ts';
+
+        const well1 = document.getElementById('demo-well-1');
+        const consoleLog = document.getElementById('console-log');
+
+        function appendLog(msg) {
+            const time = new Date().toLocaleTimeString();
+            consoleLog.innerHTML = `<div>[${time}] ${msg}</div>` + consoleLog.innerHTML;
+        }
+
+        document.getElementById('btn-change-color').addEventListener('click', () => {
+            well1.setAttribute('color', '#edf2f7');
+            appendLog('Atributo color modificado a #edf2f7 vía JavaScript');
+        });
+
+        document.getElementById('btn-toggle-size').addEventListener('click', () => {
+            const currentSize = well1.getAttribute('size');
+            const newSize = currentSize === 'large' ? 'small' : 'large';
+            well1.setAttribute('size', newSize);
+            appendLog(`Tamaño de <vcl-well> modificado a '${newSize}'`);
+        });
+
+        document.getElementById('btn-style-success').addEventListener('click', () => {
+            well1.removeAttribute('color');
+            well1.setAttribute('well-style', 'success');
+            appendLog("Estilo preset cambiado a 'success'");
+        });
+
+        document.getElementById('btn-style-danger').addEventListener('click', () => {
+            well1.removeAttribute('color');
+            well1.setAttribute('well-style', 'danger');
+            appendLog("Estilo preset cambiado a 'danger'");
+        });
+
+        document.addEventListener('vcl-click', (e) => {
+            if (e.target.id === 'btn-well-action') {
+                appendLog('Evento vcl-click capturado desde el botón interno montado dentro de <vcl-well>');
+            }
+        });
+    </script>
+</body>
+</html>

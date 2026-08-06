@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS Web Components - Interactive Test Bed Harness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #3182ce;
+            --primary-dark: #2b6cb0;
+            --success: #38a169;
+            --warning: #d69e2e;
+            --danger: #e53e3e;
+            --text-main: #1a202c;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #ffffff;
+            padding: 24px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .hero-title {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-subtitle {
+            margin: 6px 0 0 0;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .badge-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tech-pill {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #38bdf8;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 16px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 4px 0 0 0;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .test-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .test-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .test-card-title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .console-container {
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            border: 1px solid #1e293b;
+        }
+
+        .console-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #94a3b8;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            border-bottom: 1px solid #334155;
+        }
+
+        .console-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+
+        .console-body {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #38bdf8;
+            max-height: 220px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .log-entry { margin: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+        .log-timestamp { color: #64748b; margin-right: 8px; }
+        .log-tag { color: #f472b6; font-weight: 600; }
+        .log-val { color: #4ade80; }
+
+        .interactive-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-action:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    </style>
+</head>
+<body>
+
+    <vcl-page title="VCL.JS Web Components - Interactive Test Bed">
+        
+        <div class="hero-banner">
+            <div>
+                <h1 class="hero-title">⚡ Test Bed Harness — VCL.JS Web Components</h1>
+                <p class="hero-subtitle">Entorno de verificación interactivo para probar el Shadow DOM, encapsulamiento CSS y Custom Events.</p>
+            </div>
+            <div class="badge-group">
+                <span class="tech-pill">0% JQuery</span>
+                <span class="tech-pill">W3C Custom Elements v1</span>
+                <span class="tech-pill">Shadow DOM v1</span>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Componentes Listos</div>
+                <div class="metric-value" id="metric-components">8</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Eventos Capturados</div>
+                <div class="metric-value" id="metric-events">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Salud del Framework</div>
+                <div class="metric-value" style="color: var(--success);">100%</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Contenedor Raíz</div>
+                <div class="metric-value" style="font-size: 20px; color: #8b5cf6;">&lt;vcl-page&gt;</div>
+            </div>
+        </div>
+
+        <div class="section-grid">
+            
+            <div class="test-card">
+                <div class="test-card-header">
+                    <h3 class="test-card-title">1. Etiquetas e Insignias (&lt;vcl-label&gt;, &lt;vcl-badge&gt;)</h3>
+                </div>
+                <div class="control-row">
+                    <vcl-label text="Etiqueta Normal"></vcl-label>
+                    <vcl-label text="Éxito" label-style="success"></vcl-label>
+                    <vcl-label text="Advertencia" label-style="warning"></vcl-label>
+                    <vcl-label text="Crítico" label-style="important"></vcl-label>
+                    <vcl-label text="Info" label-style="info"></vcl-label>
+                </div>
+                <div class="control-row" style="margin-top: 14px;">
+                    <vcl-badge text="v1.0.0" badge-style="info"></vcl-badge>
+                    <vcl-badge text="Online" badge-style="success"></vcl-badge>
+                    <vcl-badge text="99+ Alertas" badge-style="important"></vcl-badge>
+                    <vcl-badge text="Pendiente" badge-style="warning"></vcl-badge>
+                </div>
+                <div class="interactive-bar">
+                    <button class="btn-action" id="btn-toggle-badge">Alternar Estilo Badge</button>
+                </div>
+            </div>
+
+            <div class="test-card">
+                <div class="test-card-header">
+                    <h3 class="test-card-title">2. Entradas de Texto Reactivas (&lt;vcl-input&gt;)</h3>
+                </div>
+                <div class="control-row">
+                    <vcl-input id="input-search" placeholder="Escribe para disparar vcl-change..."></vcl-input>
+                </div>
+                <div class="control-row">
+                    <vcl-input placeholder="Campo Deshabilitado" disabled></vcl-input>
+                </div>
+                <div class="interactive-bar">
+                    <button class="btn-action" id="btn-set-input">Establecer Texto vía JS</button>
+                </div>
+            </div>
+
+            <div class="test-card">
+                <div class="test-card-header">
+                    <h3 class="test-card-title">3. Botones con Eventos (&lt;vcl-button&gt;)</h3>
+                </div>
+                <div class="control-row">
+                    <vcl-button text="Guardar" button-style="primary" id="btn-demo-1"></vcl-button>
+                    <vcl-button text="Aprobar" button-style="success" id="btn-demo-2"></vcl-button>
+                    <vcl-button text="Eliminar" button-style="danger" id="btn-demo-3"></vcl-button>
+                    <vcl-button text="Deshabilitado" disabled></vcl-button>
+                </div>
+                <div class="interactive-bar">
+                    <button class="btn-action" id="btn-toggle-disable">Deshabilitar/Habilitar Botón</button>
+                </div>
+            </div>
+
+            <div class="test-card">
+                <div class="test-card-header">
+                    <h3 class="test-card-title">4. Paneles Contenedores (&lt;vcl-panel&gt;)</h3>
+                </div>
+                <vcl-panel header-title="Información del Proyecto VCL.JS" panel-style="primary">
+                    <p style="margin: 0; font-size: 13px; color: #4a5568;">
+                        Los componentes montados dentro de este panel usan la ranura nativa <code>&lt;slot&gt;</code> de HTML5 y Shadow DOM v1.
+                    </p>
+                </vcl-panel>
+            </div>
+
+        </div>
+
+        <div class="console-container">
+            <div class="console-header">
+                <div class="console-dots">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                </div>
+                <div>TERMINAL CONSOLE — VCL CUSTOM EVENTS MONITOR</div>
+                <button class="btn-action" id="btn-clear-console" style="background:#334155; color:#fff; border:none; padding:2px 8px;">Limpiar</button>
+            </div>
+            <div class="console-body" id="console-output">
+                <div class="log-entry"><span class="log-timestamp">[SYS]</span> Escuchando eventos burbujeantes desde el Shadow DOM...</div>
+            </div>
+        </div>
+
+    </vcl-page>
+
+    <script type="module">
+        import '/web-components/index.ts';
+
+        let eventCount = 0;
+        const consoleEl = document.getElementById('console-output');
+        const metricEventsEl = document.getElementById('metric-events');
+
+        function appendLog(eventType, targetTag, detailStr) {
+            eventCount++;
+            metricEventsEl.textContent = eventCount;
+
+            const time = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.innerHTML = `<span class="log-timestamp">[${time}]</span> <span class="log-tag">${eventType}</span> de &lt;${targetTag}&gt;: <span class="log-val">${detailStr}</span>`;
+            consoleEl.prepend(logEntry);
+        }
+
+        document.addEventListener('vcl-click', (e) => {
+            const tag = e.target.tagName.toLowerCase();
+            const txt = e.target.getAttribute('text') || 'Botón';
+            appendLog('vcl-click', tag, `text="${txt}"`);
+        });
+
+        document.addEventListener('vcl-change', (e) => {
+            const tag = e.target.tagName.toLowerCase();
+            appendLog('vcl-change', tag, `val="${e.detail.value}"`);
+        });
+
+        document.getElementById('btn-set-input').addEventListener('click', () => {
+            const input = document.getElementById('input-search');
+            input.value = '¡Texto establecido dinámicamente!';
+        });
+
+        document.getElementById('btn-toggle-badge').addEventListener('click', () => {
+            const badge = document.querySelector('vcl-badge');
+            const currentStyle = badge.getAttribute('badge-style');
+            badge.setAttribute('badge-style', currentStyle === 'success' ? 'important' : 'success');
+        });
+
+        document.getElementById('btn-toggle-disable').addEventListener('click', () => {
+            const btn = document.getElementById('btn-demo-1');
+            if (btn.hasAttribute('disabled')) btn.removeAttribute('disabled');
+            else btn.setAttribute('disabled', '');
+        });
+
+        document.getElementById('btn-clear-console').addEventListener('click', () => {
+            consoleEl.innerHTML = '<div class="log-entry"><span class="log-timestamp">[SYS]</span> Consola reiniciada.</div>';
+        });
+    </script>
+</body>
+</html>

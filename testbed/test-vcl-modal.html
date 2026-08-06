@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS - Test &lt;vcl-modal&gt; (Delphi 10.3 Modal Form)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: #f8fafc; color: #1a202c; }
+        .hero-banner { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; padding: 24px 32px; border-radius: 12px; margin-bottom: 24px; }
+        .test-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+        .console-container { background: #0f172a; border-radius: 12px; border: 1px solid #1e293b; color: #38bdf8; font-family: monospace; padding: 16px; max-height: 220px; overflow-y: auto; }
+        .btn-action { padding: 8px 16px; font-size: 13px; font-weight: 600; border-radius: 6px; border: 1px solid #cbd5e0; background: #fff; cursor: pointer; margin-right: 8px; }
+        .btn-action:hover { background: #edf2f7; }
+    </style>
+</head>
+<body>
+    <!-- REGLA DE ORO VCL: Todo componente VCL se monta dentro de un <vcl-page> como padre ancestro obligatorio -->
+    <vcl-page title="Prueba <vcl-modal> (Delphi 10.3 Modal Form)">
+        <div class="hero-banner">
+            <h1 style="margin:0;">🪟 Componente: &lt;vcl-modal&gt; (Delphi 10.3 Modal Form)</h1>
+            <p style="margin:6px 0 0 0; color:#94a3b8;">Formulario Modal Bloqueante con ModalResult (mrOk / mrCancel) y prevención de cierre al hacer clic afuera (0% JQuery).</p>
+        </div>
+
+        <div class="test-card">
+            <h3 style="margin-top:0;">Pruebas de Formulario Modal Delphi 10.3</h3>
+            <p style="font-size:14px; color:#4a5568;">
+                Por defecto, el modal se comporta como un formulario modal VCL de Delphi: <strong>bloquea la pantalla y NO se cierra al hacer clic afuera</strong> hasta que se presione Aceptar (<code>mrOk</code>) o Cancelar (<code>mrCancel</code>).
+            </p>
+            
+            <div style="margin-top:16px;">
+                <button class="btn-action" id="btn-show-modal">ShowModal() [Async Promise]</button>
+                <button class="btn-action" id="btn-toggle-outside">Alternar Permiso de Cierre Externo (close-on-outside-click)</button>
+            </div>
+
+            <!-- Componente Modal Nativo -->
+            <vcl-modal id="demo-modal" header-title="Formulario Modal VCL Delphi 10.3" size="medium" ok-text="Aceptar (mrOk)" cancel-text="Cancelar (mrCancel)">
+                <p style="margin:0 0 12px 0;">Modifique los datos antes de guardar la sesión de trabajo:</p>
+                <vcl-input placeholder="Nombre de Usuario..."></vcl-input>
+            </vcl-modal>
+        </div>
+
+        <div class="console-container" id="console-log">
+            <div>[SYS] Escuchando eventos vcl-modal-result (mrOk / mrCancel) y resolución de ShowModal()...</div>
+        </div>
+    </vcl-page>
+
+    <script type="module">
+        import '/web-components/index.ts';
+
+        const modal = document.getElementById('demo-modal');
+        const consoleLog = document.getElementById('console-log');
+
+        function appendLog(msg) {
+            const time = new Date().toLocaleTimeString();
+            consoleLog.innerHTML = `<div>[${time}] ${msg}</div>` + consoleLog.innerHTML;
+        }
+
+        // Prueba del método ShowModal() asíncrono
+        document.getElementById('btn-show-modal').addEventListener('click', async () => {
+            appendLog('Iniciando ShowModal()... Esperando resultado del usuario.');
+            
+            // Devuelve Promise<ModalResult> ('mrOk' | 'mrCancel')
+            const result = await modal.showModal();
+            appendLog(`ShowModal() Resuelto con ModalResult: <strong style="color:#4ade80;">${result}</strong>`);
+        });
+
+        // Alternar la propiedad close-on-outside-click
+        document.getElementById('btn-toggle-outside').addEventListener('click', () => {
+            const current = modal.closeOnOutsideClick;
+            modal.closeOnOutsideClick = !current;
+            appendLog(`Propiedad close-on-outside-click = <strong style="color:#f472b6;">${!current}</strong> (Clic afuera ${!current ? 'PERMITIDO' : 'BLOQUEADO [Delphi 10.3 Default]'})`);
+        });
+
+        // Listener de eventos nativo de resultado modal
+        document.addEventListener('vcl-modal-result', (e) => {
+            appendLog(`CustomEvent 'vcl-modal-result' capturado: modalResult = <strong>${e.detail.modalResult}</strong>`);
+        });
+    </script>
+</body>
+</html>

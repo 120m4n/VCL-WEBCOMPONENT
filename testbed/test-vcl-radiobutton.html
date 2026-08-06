@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS - Test &lt;vcl-radiobutton&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #3182ce;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: #1a202c;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 24px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-title { margin: 0; font-size: 24px; font-weight: 700; }
+        .hero-subtitle { margin: 6px 0 0 0; color: #94a3b8; font-size: 14px; }
+
+        .test-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .test-card-title {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .console-container {
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+            margin-top: 24px;
+        }
+
+        .console-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .console-body {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #38bdf8;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .log-entry { margin: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+        .log-timestamp { color: #64748b; margin-right: 8px; }
+        .log-tag { color: #f472b6; font-weight: 600; }
+        .log-val { color: #4ade80; }
+
+        .btn-action {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-right: 8px;
+        }
+        .btn-action:hover { background: #edf2f7; }
+    </style>
+</head>
+<body>
+
+    <!-- REGLA DE ORO VCL: Todo componente VCL se monta dentro de un <vcl-page> como padre ancestro obligatorio -->
+    <vcl-page title="Prueba de Componente Migrado - <vcl-radiobutton>">
+
+        <div class="hero-banner">
+            <h1 class="hero-title">🔘 Prueba de Componente: &lt;vcl-radiobutton&gt;</h1>
+            <p class="hero-subtitle">Migración directa de <code>TRadioButton</code> a Custom Element nativo con Shadow DOM encapsulado (0% JQuery).</p>
+        </div>
+
+        <div class="test-card">
+            <h2 class="test-card-title">1. Selección de Plan de Suscripción (Grupo: "plan")</h2>
+            
+            <div class="radio-group">
+                <vcl-radiobutton id="radio-plan-starter" name="plan" text="Plan Inicial ($10/mes)" value="starter"></vcl-radiobutton>
+                <vcl-radiobutton id="radio-plan-pro" name="plan" text="Plan Profesional ($29/mes)" value="pro" checked></vcl-radiobutton>
+                <vcl-radiobutton id="radio-plan-enterprise" name="plan" text="Plan Empresarial ($99/mes)" value="enterprise"></vcl-radiobutton>
+                <vcl-radiobutton id="radio-plan-disabled" name="plan" text="Plan Gratuito Legacy (Agotado)" value="legacy" disabled></vcl-radiobutton>
+            </div>
+
+            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border-color);">
+                <button class="btn-action" id="btn-select-enterprise">Seleccionar "Plan Empresarial" vía JS</button>
+                <button class="btn-action" id="btn-toggle-disabled">Alternar Deshabilitado (JS)</button>
+            </div>
+        </div>
+
+        <!-- Integración con componentes previas -->
+        <vcl-panel header-title="Resumen de Selección Reactiva" panel-style="primary">
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <vcl-label text="Plan Seleccionado:" label-style="info"></vcl-label>
+                <vcl-badge id="badge-plan" text="Plan Profesional" badge-style="success"></vcl-badge>
+                <vcl-button text="Confirmar Suscripción" button-style="success"></vcl-button>
+            </div>
+        </vcl-panel>
+
+        <!-- Consola de Eventos -->
+        <div class="console-container">
+            <div class="console-header">
+                <div>MONITOR DE EVENTOS NATIVOS — &lt;vcl-radiobutton&gt;</div>
+                <button class="btn-action" id="btn-clear" style="padding: 2px 8px; font-size: 11px;">Limpiar</button>
+            </div>
+            <div class="console-body" id="console-log">
+                <div class="log-entry"><span class="log-timestamp">[SYS]</span> Escuchando eventos 'vcl-change' de &lt;vcl-radiobutton&gt;...</div>
+            </div>
+        </div>
+
+    </vcl-page>
+
+    <script type="module">
+        import '/web-components/index.ts';
+
+        const consoleLog = document.getElementById('console-log');
+        const badgePlan = document.getElementById('badge-plan');
+
+        function logEvent(tag, detail) {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-timestamp">[${time}]</span> <span class="log-tag">vcl-change</span> de &lt;${tag}&gt;: group="<span class="log-val">${detail.name}</span>", val="<span class="log-val">${detail.value}</span>"`;
+            consoleLog.prepend(entry);
+        }
+
+        document.addEventListener('vcl-change', (e) => {
+            if (e.target.tagName.toLowerCase() === 'vcl-radiobutton') {
+                logEvent('vcl-radiobutton', e.detail);
+
+                if (e.detail.name === 'plan') {
+                    badgePlan.setAttribute('text', e.detail.value.toUpperCase());
+                    badgePlan.setAttribute('badge-style', e.detail.value === 'enterprise' ? 'important' : 'success');
+                }
+            }
+        });
+
+        document.getElementById('btn-select-enterprise').addEventListener('click', () => {
+            const enterpriseRadio = document.getElementById('radio-plan-enterprise');
+            enterpriseRadio.checked = true;
+            badgePlan.setAttribute('text', 'ENTERPRISE');
+            badgePlan.setAttribute('badge-style', 'important');
+        });
+
+        document.getElementById('btn-toggle-disabled').addEventListener('click', () => {
+            const starterRadio = document.getElementById('radio-plan-starter');
+            if (starterRadio.hasAttribute('disabled')) starterRadio.removeAttribute('disabled');
+            else starterRadio.setAttribute('disabled', '');
+        });
+
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            consoleLog.innerHTML = '<div class="log-entry"><span class="log-timestamp">[SYS]</span> Consola reiniciada.</div>';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS - Test &lt;vcl-textarea&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #3182ce;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: #1a202c;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 24px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-title { margin: 0; font-size: 24px; font-weight: 700; }
+        .hero-subtitle { margin: 6px 0 0 0; color: #94a3b8; font-size: 14px; }
+
+        .test-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .test-card-title {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .textarea-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .console-container {
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+            margin-top: 24px;
+        }
+
+        .console-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .console-body {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #38bdf8;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .log-entry { margin: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+        .log-timestamp { color: #64748b; margin-right: 8px; }
+        .log-tag { color: #f472b6; font-weight: 600; }
+        .log-val { color: #4ade80; }
+
+        .btn-action {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-right: 8px;
+        }
+        .btn-action:hover { background: #edf2f7; }
+    </style>
+</head>
+<body>
+
+    <!-- REGLA DE ORO VCL: Todo componente VCL se monta dentro de un <vcl-page> como padre ancestro obligatorio -->
+    <vcl-page title="Prueba de Componente Migrado - <vcl-textarea>">
+
+        <div class="hero-banner">
+            <h1 class="hero-title">📝 Prueba de Componente: &lt;vcl-textarea&gt;</h1>
+            <p class="hero-subtitle">Migración directa de <code>TTextArea</code> a Custom Element nativo con Shadow DOM encapsulado (0% JQuery).</p>
+        </div>
+
+        <div class="test-card">
+            <h2 class="test-card-title">1. Galería de Variantes de &lt;vcl-textarea&gt;</h2>
+            
+            <div class="textarea-group">
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 4px; display: block;">Comentarios Generales (3 Filas):</label>
+                    <vcl-textarea id="txt-comments" placeholder="Escriba aquí sus observaciones o comentarios..." rows="3"></vcl-textarea>
+                </div>
+
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 4px; display: block;">Descripción Detallada (5 Filas, Con Texto Inicial):</label>
+                    <vcl-textarea id="txt-desc" rows="5" value="Este componente de área de texto multilínea ha sido refactorizado a Web Component nativo eliminando todas las llamadas a JQuery."></vcl-textarea>
+                </div>
+
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 4px; display: block;">Modo Solo Lectura (ReadOnly):</label>
+                    <vcl-textarea rows="2" value="Este texto es de solo lectura y no puede ser modificado por el usuario." readonly></vcl-textarea>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border-color);">
+                <button class="btn-action" id="btn-insert-text">Insertar Texto de Ejemplo (JS)</button>
+                <button class="btn-action" id="btn-clear-text">Limpiar Campo (JS)</button>
+            </div>
+        </div>
+
+        <!-- Integración con componentes previas -->
+        <vcl-panel header-title="Resumen de Caracteres Reactivo" panel-style="primary">
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <vcl-label text="Total de Caracteres:" label-style="info"></vcl-label>
+                <vcl-badge id="badge-count" text="0 Caracteres" badge-style="warning"></vcl-badge>
+                <vcl-button text="Enviar Formulario" button-style="success"></vcl-button>
+            </div>
+        </vcl-panel>
+
+        <!-- Consola de Eventos -->
+        <div class="console-container">
+            <div class="console-header">
+                <div>MONITOR DE EVENTOS NATIVOS — &lt;vcl-textarea&gt;</div>
+                <button class="btn-action" id="btn-clear" style="padding: 2px 8px; font-size: 11px;">Limpiar</button>
+            </div>
+            <div class="console-body" id="console-log">
+                <div class="log-entry"><span class="log-timestamp">[SYS]</span> Escuchando eventos 'vcl-change' de &lt;vcl-textarea&gt;...</div>
+            </div>
+        </div>
+
+    </vcl-page>
+
+    <script type="module">
+        import '/web-components/index.ts';
+
+        const consoleLog = document.getElementById('console-log');
+        const badgeCount = document.getElementById('badge-count');
+        const txtComments = document.getElementById('txt-comments');
+
+        function logEvent(tag, detail) {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-timestamp">[${time}]</span> <span class="log-tag">vcl-change</span> de &lt;${tag}&gt;: length=<span class="log-val">${detail.value.length}</span>, val="<span class="log-val">${detail.value.substring(0, 30)}...</span>"`;
+            consoleLog.prepend(entry);
+        }
+
+        document.addEventListener('vcl-change', (e) => {
+            if (e.target.tagName.toLowerCase() === 'vcl-textarea') {
+                logEvent('vcl-textarea', e.detail);
+
+                const len = e.detail.value.length;
+                badgeCount.setAttribute('text', `${len} Caracteres`);
+                badgeCount.setAttribute('badge-style', len > 50 ? 'success' : 'warning');
+            }
+        });
+
+        document.getElementById('btn-insert-text').addEventListener('click', () => {
+            txtComments.value = 'Texto de prueba generado automáticamente desde un script externo para validar la reactividad del Web Component.';
+            badgeCount.setAttribute('text', `${txtComments.value.length} Caracteres`);
+            badgeCount.setAttribute('badge-style', 'success');
+        });
+
+        document.getElementById('btn-clear-text').addEventListener('click', () => {
+            txtComments.value = '';
+            badgeCount.setAttribute('text', '0 Caracteres');
+            badgeCount.setAttribute('badge-style', 'warning');
+        });
+
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            consoleLog.innerHTML = '<div class="log-entry"><span class="log-timestamp">[SYS]</span> Consola reiniciada.</div>';
+        });
+    </script>
+</body>
+</html>

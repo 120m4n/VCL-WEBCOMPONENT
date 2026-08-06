@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>VCL.JS - Test &lt;vcl-pagination&gt;</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: #f8fafc; color: #1a202c; }
+        .hero-banner { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; padding: 24px 32px; border-radius: 12px; margin-bottom: 24px; }
+        .test-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; }
+        .console-container { background: #0f172a; border-radius: 12px; border: 1px solid #1e293b; color: #38bdf8; font-family: monospace; padding: 16px; margin-top: 16px; }
+    </style>
+</head>
+<body>
+    <vcl-page title="Prueba &lt;vcl-pagination&gt;">
+        <div class="hero-banner">
+            <h1 style="margin:0;">📄 Componente: &lt;vcl-pagination&gt;</h1>
+            <p style="margin:6px 0 0 0; color:#94a3b8;">Migración de TPagination a Custom Element (0% JQuery).</p>
+        </div>
+
+        <div class="test-card">
+            <vcl-pagination total-pages="5" current-page="1"></vcl-pagination>
+        </div>
+
+        <div class="console-container" id="console-log">
+            <div>[SYS] Escuchando eventos vcl-page-change...</div>
+        </div>
+    </vcl-page>
+
+    <script type="module">
+        import '/web-components/index.ts';
+        document.addEventListener('vcl-page-change', (e) => {
+            const log = document.getElementById('console-log');
+            log.innerHTML = `<div>[${new Date().toLocaleTimeString()}] Página cambiada a: ${e.detail.page} de ${e.detail.totalPages}</div>` + log.innerHTML;
+        });
+    </script>
+</body>
+</html>
