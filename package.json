@@ -1,0 +1,17 @@
+{
+  "name": "vcl.js",
+  "version": "2.0.0",
+  "description": "VCL.JS Web Components Framework - 100% Zero JQuery",
+  "main": "web-components/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "testbed": "vite testbed/index.html --host --port 5173",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vite": "^5.1.0"
+  }
+}

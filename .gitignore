@@ -1,0 +1,9 @@
+node_modules/
+dist/
+graphify-out/
+.DS_Store
+*.log
+delphi_4/
+dist/
+VCL/
+docs/
