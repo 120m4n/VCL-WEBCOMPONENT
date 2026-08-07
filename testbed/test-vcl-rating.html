@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-rating&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc; color: #1a202c;
+        }
+        .hero {
+            background: linear-gradient(135deg, #78350f 0%, #b45309 100%);
+            color: #fff; padding: 28px 32px; border-radius: 14px;
+            margin-bottom: 28px; box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #fde68a; font-size: 14px; }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 {
+            margin: 0 0 20px; font-size: 16px; font-weight: 600; color: #374151;
+            border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
+        }
+        .row { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .row label { font-size: 12px; font-weight: 600; color: #6b7280; min-width: 160px; }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+        button {
+            padding: 7px 14px; font-size: 12.5px; font-weight: 500;
+            border-radius: 6px; border: 1px solid #d1d5db; background: #fff;
+            cursor: pointer; transition: all 0.15s; font-family: inherit; color: #374151;
+        }
+        button:hover { background: #f3f4f6; border-color: #9ca3af; }
+        .console-box {
+            background: #0f172a; border-radius: 10px; padding: 16px;
+            color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+            max-height: 180px; overflow-y: auto; line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>⭐ &lt;vcl-rating&gt;</h1>
+    <p>Port de <code>TRatingStart</code> · Calificación por estrellas SVG interactivas con soporte de medias estrellas</p>
+</div>
+
+<!-- ── Test 1: Tamaños y Medias Estrellas ─────────────────────────────────── -->
+<div class="card">
+    <h2>1. Variantes de Tamaño y Medias Estrellas (allow-half)</h2>
+    <div class="row">
+        <label>Pequeño (size="sm", 4.5★):</label>
+        <vcl-rating size="sm" max="5" value="4.5" allow-half></vcl-rating>
+    </div>
+    <div class="row">
+        <label>Mediano (size="md", 3.5★):</label>
+        <vcl-rating size="md" max="5" value="3.5" allow-half></vcl-rating>
+    </div>
+    <div class="row">
+        <label>Grande (size="lg", 5★):</label>
+        <vcl-rating size="lg" max="5" value="5" color="success"></vcl-rating>
+    </div>
+    <div class="row">
+        <label>Extra Grande (size="xl", 2.5★):</label>
+        <vcl-rating size="xl" max="5" value="2.5" color="purple" allow-half></vcl-rating>
+    </div>
+</div>
+
+<!-- ── Test 2: Control Interactivo ──────────────────────────────────────── -->
+<div class="card">
+    <h2>2. Control Interactivo y Estados (ReadOnly, Disabled)</h2>
+    <div class="row">
+        <label>Interactivo (10 estrellas):</label>
+        <vcl-rating id="r-interactive" max="10" value="7.5" allow-half></vcl-rating>
+    </div>
+    <div class="controls">
+        <button onclick="document.getElementById('r-interactive').value = 10">10★ (Máx)</button>
+        <button onclick="document.getElementById('r-interactive').value = 5.5">5.5★</button>
+        <button onclick="document.getElementById('r-interactive').value = 1">1★ (Mín)</button>
+        <button onclick="toggleAttr('r-interactive', 'readonly')">Toggle ReadOnly</button>
+        <button onclick="toggleAttr('r-interactive', 'disabled')">Toggle Disabled</button>
+    </div>
+</div>
+
+<!-- ── Test 3: Monitor de Eventos ────────────────────────────────────────── -->
+<div class="card">
+    <h2>3. Monitor de Eventos (<code>vcl-hover</code>, <code>vcl-change</code>)</h2>
+    <div class="console-box" id="console">
+        <div>[SYS] Pasa el ratón o haz clic sobre las estrellas...</div>
+    </div>
+</div>
+
+<script type="module">
+    import '/web-components/index.ts';
+
+    const consoleEl = document.getElementById('console');
+
+    function log(type, val) {
+        const time = new Date().toLocaleTimeString();
+        const row = document.createElement('div');
+        row.innerHTML = `[${time}] <span style="color:#f472b6;">${type}</span>: <b style="color:#4ade80;">valor = ${val}★</b>`;
+        consoleEl.prepend(row);
+    }
+
+    document.addEventListener('vcl-hover', (e) => {
+        if (e.target.tagName === 'VCL-RATING') {
+            log('vcl-hover', e.detail.hoverValue);
+        }
+    });
+
+    document.addEventListener('vcl-change', (e) => {
+        if (e.target.tagName === 'VCL-RATING') {
+            log('vcl-change (confirmado)', e.detail.value);
+        }
+    });
+
+    window.toggleAttr = function(id, attr) {
+        const el = document.getElementById(id);
+        if (el.hasAttribute(attr)) el.removeAttribute(attr);
+        else el.setAttribute(attr, '');
+    };
+</script>
+</body>
+</html>

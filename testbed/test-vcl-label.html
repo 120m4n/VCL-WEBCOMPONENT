@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-label&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 24px; font-family: 'Inter', system-ui, sans-serif; background: #f8fafc; color: #1a202c; }
+        .hero { background: linear-gradient(135deg, #1e293b 0%, #475569 100%); color: #fff; padding: 28px 32px; border-radius: 14px; margin-bottom: 28px; }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+        .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    </style>
+</head>
+<body>
+<div class="hero">
+    <h1>🏷️ &lt;vcl-label&gt;</h1>
+    <p>Port de <code>TLabel</code> · Etiquetas de texto enriquecidas con estilos contextuales</p>
+</div>
+<div class="card">
+    <h2>Variantes de Etiqueta (label-style)</h2>
+    <div class="row">
+        <vcl-label text="Etiqueta Normal"></vcl-label>
+        <vcl-label text="Info" label-style="info"></vcl-label>
+        <vcl-label text="Éxito" label-style="success"></vcl-label>
+        <vcl-label text="Advertencia" label-style="warning"></vcl-label>
+        <vcl-label text="Crítico" label-style="important"></vcl-label>
+    </div>
+</div>
+<script type="module" src="/web-components/index.ts"></script>
+</body>
+</html>

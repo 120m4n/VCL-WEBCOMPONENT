@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-widget-grid&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc; color: #1a202c;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: #fff; padding: 28px 32px; border-radius: 14px;
+            margin-bottom: 28px; box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #c7d2fe; font-size: 14px; }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 {
+            margin: 0 0 20px; font-size: 16px; font-weight: 600; color: #374151;
+            border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
+        }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+        button {
+            padding: 7px 14px; font-size: 12.5px; font-weight: 500;
+            border-radius: 6px; border: 1px solid #d1d5db; background: #fff;
+            cursor: pointer; transition: all 0.15s; font-family: inherit; color: #374151;
+        }
+        button:hover { background: #f3f4f6; border-color: #9ca3af; }
+        .console-box {
+            background: #0f172a; border-radius: 10px; padding: 16px;
+            color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+            max-height: 180px; overflow-y: auto; line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>📊 &lt;vcl-widget-grid&gt; & &lt;vcl-widget-panel&gt;</h1>
+    <p>Port de <code>TWidgetGrid</code> / <code>TWdgetPanel</code> · Cuadrícula responsiva de widgets de dashboard con colapso y cierre</p>
+</div>
+
+<!-- ── Test 1: Grid de Widgets ───────────────────────────────────────────── -->
+<div class="card">
+    <h2>1. Cuadrícula de Widgets Dashboard (2 Columnas)</h2>
+    <vcl-widget-grid id="test-grid" columns="2">
+        <vcl-widget-panel title="Rendimiento del Servidor" icon="⚡" closable>
+            <p style="margin:0; font-size:13px; color:#475569;">Uso de CPU: 12% · Memoria: 256MB · Latencia: 4ms</p>
+        </vcl-widget-panel>
+        <vcl-widget-panel title="Estado de Migración" icon="📊" closable>
+            <p style="margin:0; font-size:13px; color:#475569;">Fase 4 completada al 100%. 43 Web Components listos.</p>
+        </vcl-widget-panel>
+        <vcl-widget-panel title="Terminal de Red" icon="🌐" closable>
+            <p style="margin:0; font-size:13px; color:#475569;">Conexiones activas: 1,420 · WebSocket: Online.</p>
+        </vcl-widget-panel>
+        <vcl-widget-panel title="Base de Datos" icon="💾" closable>
+            <p style="margin:0; font-size:13px; color:#475569;">Transacciones por segundo: 850 tps · Replicación: OK.</p>
+        </vcl-widget-panel>
+    </vcl-widget-grid>
+    <div class="controls">
+        <button onclick="document.getElementById('test-grid').setAttribute('columns', '3')">3 Columnas</button>
+        <button onclick="document.getElementById('test-grid').setAttribute('columns', '2')">2 Columnas</button>
+        <button onclick="document.getElementById('test-grid').setAttribute('columns', '1')">1 Columna</button>
+    </div>
+</div>
+
+<!-- ── Test 2: Monitor de Eventos ────────────────────────────────────────── -->
+<div class="card">
+    <h2>2. Monitor de Eventos (<code>vcl-collapse</code>, <code>vcl-close</code>)</h2>
+    <div class="console-box" id="console">
+        <div>[SYS] Colapsa o cierra los paneles de widget arriba...</div>
+    </div>
+</div>
+
+<script type="module">
+    import '/web-components/index.ts';
+
+    const consoleEl = document.getElementById('console');
+
+    function log(type, detail) {
+        const time = new Date().toLocaleTimeString();
+        const row = document.createElement('div');
+        row.innerHTML = `[${time}] <span style="color:#f472b6;">${type}</span>: <b style="color:#4ade80;">${JSON.stringify(detail)}</b>`;
+        consoleEl.prepend(row);
+    }
+
+    document.addEventListener('vcl-collapse', (e) => {
+        log('vcl-collapse', e.detail);
+    });
+
+    document.addEventListener('vcl-close', (e) => {
+        log('vcl-close', 'Panel cerrado');
+    });
+</script>
+</body>
+</html>

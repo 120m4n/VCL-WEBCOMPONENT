@@ -9,7 +9,7 @@ export { VCLContainerElement } from './core/VCLContainerElement';
 // Exportación y registro de Contenedores Raíz
 export { VCLPage } from './containers/page/vcl-page';
 
-// Exportación y registro de Componentes UI
+// Exportación y registro de Componentes UI (Fase 2)
 export { VCLLabel } from './components/label/vcl-label';
 export { VCLButton } from './components/button/vcl-button';
 export { VCLInput } from './components/input/vcl-input';
@@ -27,6 +27,8 @@ export { VCLImage } from './components/image/vcl-image';
 export { VCLIcon } from './components/icon/vcl-icon';
 export { VCLToggleSwitch } from './components/toggleswitch/vcl-toggleswitch';
 export { VCLTypeAhead } from './components/typeahead/vcl-typeahead';
+
+// Exportación y registro de Componentes UI (Fase 3)
 export { VCLBreadcrumb, VCLBreadcrumbItem } from './components/breadcrumb/vcl-breadcrumb';
 export { VCLPagination } from './components/pagination/vcl-pagination';
 export { VCLAlert } from './components/alert/vcl-alert';
@@ -41,3 +43,16 @@ export { VCLStatusBar, VCLStatusPanel } from './components/statusbar/vcl-statusb
 export { VCLProgressBar } from './components/progressbar/vcl-progressbar';
 export { VCLTreeView, VCLTreeNode } from './components/treeview/vcl-treeview';
 export { VCLListView, VCLListColumn } from './components/listview/vcl-listview';
+
+// Exportación y registro de Componentes UI (Fase 4 - Entradas Avanzadas, Fechas, Sliders, Gauges y Menús)
+export { VCLSlider } from './components/slider/vcl-slider';
+export { VCLRangeSlider } from './components/rangeslider/vcl-rangeslider';
+export { VCLRating } from './components/rating/vcl-rating';
+export { VCLGauge } from './components/gauge/vcl-gauge';
+export { VCLDateInput, VCLDateButton, VCLTimeInput } from './components/dateinput/vcl-dateinput';
+export { VCLVerticalCheckBoxList, VCLVerticalCheckBox } from './components/vertical-checkboxlist/vcl-vertical-checkboxlist';
+export { VCLPillBox, VCLPillBoxItem } from './components/pillbox/vcl-pillbox';
+export { VCLTagCloud, VCLTagCloudItem } from './components/tagcloud/vcl-tagcloud';
+export { VCLCarousel, VCLCarouselPage } from './components/carousel/vcl-carousel';
+export { VCLPopupMenu, VCLMenuItem } from './components/popupmenu/vcl-popupmenu';
+export { VCLWidgetGrid, VCLWidgetPanel } from './components/widget-grid/vcl-widget-grid';

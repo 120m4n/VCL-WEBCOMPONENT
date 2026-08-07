@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-gauge&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc; color: #1a202c;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1e1b4b 0%, #3730a3 100%);
+            color: #fff; padding: 28px 32px; border-radius: 14px;
+            margin-bottom: 28px; box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #c7d2fe; font-size: 14px; }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 {
+            margin: 0 0 20px; font-size: 16px; font-weight: 600; color: #374151;
+            border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
+        }
+        .gauge-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px; justify-items: center; align-items: center;
+        }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; justify-content: center; }
+        button {
+            padding: 7px 14px; font-size: 12.5px; font-weight: 500;
+            border-radius: 6px; border: 1px solid #d1d5db; background: #fff;
+            cursor: pointer; transition: all 0.15s; font-family: inherit; color: #374151;
+        }
+        button:hover { background: #f3f4f6; border-color: #9ca3af; }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>🧭 &lt;vcl-gauge&gt;</h1>
+    <p>Port de <code>TGauge</code> · Medidor radial/semicircular SVG nativo con aguja indicadora y zonas de alerta</p>
+</div>
+
+<!-- ── Test 1: Medidores y Estados de Umbral ──────────────────────────────── -->
+<div class="card">
+    <h2>1. Medidores SVG con Umbrales de Alerta (Normal, Warning, Critical)</h2>
+    <div class="gauge-grid">
+        <div>
+            <vcl-gauge id="g-speed" min="0" max="140" value="65" units="km/h" title="VELOCIDAD" warning-threshold="80" critical-threshold="110"></vcl-gauge>
+        </div>
+        <div>
+            <vcl-gauge id="g-cpu" min="0" max="100" value="88" units="%" title="USO CPU" warning-threshold="70" critical-threshold="85"></vcl-gauge>
+        </div>
+        <div>
+            <vcl-gauge id="g-temp" min="0" max="100" value="95" units="°C" title="TEMPERATURA" warning-threshold="60" critical-threshold="90"></vcl-gauge>
+        </div>
+    </div>
+</div>
+
+<!-- ── Test 2: Control Interactivo y Simulación en Vivo ──────────────────── -->
+<div class="card">
+    <h2>2. Control Interactivo en Vivo</h2>
+    <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+        <vcl-gauge id="g-interactive" min="0" max="100" value="45" units="%" title="TELEMETRÍA" warning-threshold="65" critical-threshold="85"></vcl-gauge>
+    </div>
+    <div class="controls">
+        <button onclick="document.getElementById('g-interactive').value = 25">Bajo (25%)</button>
+        <button onclick="document.getElementById('g-interactive').value = 72">Warning (72%)</button>
+        <button onclick="document.getElementById('g-interactive').value = 94">Critical (94%)</button>
+        <button id="btn-auto" onclick="toggleAutoDemo()" style="background:#2563eb; color:#fff; border-color:#1d4ed8;">▶ Iniciar Simulación Dinámica</button>
+    </div>
+</div>
+
+<script type="module">
+    import '/web-components/index.ts';
+
+    let simTimer = null;
+    window.toggleAutoDemo = function() {
+        const btn = document.getElementById('btn-auto');
+        if (simTimer) {
+            clearInterval(simTimer);
+            simTimer = null;
+            btn.textContent = '▶ Iniciar Simulación Dinámica';
+            btn.style.background = '#2563eb';
+        } else {
+            btn.textContent = '⏹ Detener Simulación';
+            btn.style.background = '#dc2626';
+            simTimer = setInterval(() => {
+                const val = Math.floor(Math.random() * 100);
+                document.getElementById('g-interactive').value = val;
+            }, 1200);
+        }
+    };
+</script>
+</body>
+</html>

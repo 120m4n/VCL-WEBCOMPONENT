@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-panel&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 24px; font-family: 'Inter', system-ui, sans-serif; background: #f8fafc; color: #1a202c; }
+        .hero { background: linear-gradient(135deg, #0f172a 0%, #334155 100%); color: #fff; padding: 28px 32px; border-radius: 14px; margin-bottom: 28px; }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+    </style>
+</head>
+<body>
+<div class="hero">
+    <h1>📦 &lt;vcl-panel&gt;</h1>
+    <p>Port de <code>TPanel</code> · Panel contenedor con cabecera, cuerpo y pie de página encapsulados</p>
+</div>
+<div class="card">
+    <h2>1. Paneles con Variantes</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <vcl-panel title="Panel Primario" panel-style="primary">
+            <p style="margin:0; font-size:13px;">Contenido estructurado del panel con Shadow DOM v1.</p>
+        </vcl-panel>
+        <vcl-panel title="Panel de Éxito" panel-style="success">
+            <p style="margin:0; font-size:13px;">Operación realizada con éxito en la base de datos.</p>
+        </vcl-panel>
+        <vcl-panel title="Panel de Advertencia" panel-style="warning">
+            <p style="margin:0; font-size:13px;">Se requiere atención del administrador.</p>
+        </vcl-panel>
+    </div>
+</div>
+<script type="module" src="/web-components/index.ts"></script>
+</body>
+</html>

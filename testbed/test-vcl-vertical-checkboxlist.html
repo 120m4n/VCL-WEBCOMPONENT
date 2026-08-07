@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-vertical-checkboxlist&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc; color: #1a202c;
+        }
+        .hero {
+            background: linear-gradient(135deg, #047857 0%, #064e3b 100%);
+            color: #fff; padding: 28px 32px; border-radius: 14px;
+            margin-bottom: 28px; box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #a7f3d0; font-size: 14px; }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 {
+            margin: 0 0 20px; font-size: 16px; font-weight: 600; color: #374151;
+            border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
+        }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+        button {
+            padding: 7px 14px; font-size: 12.5px; font-weight: 500;
+            border-radius: 6px; border: 1px solid #d1d5db; background: #fff;
+            cursor: pointer; transition: all 0.15s; font-family: inherit; color: #374151;
+        }
+        button:hover { background: #f3f4f6; border-color: #9ca3af; }
+        .console-box {
+            background: #0f172a; border-radius: 10px; padding: 16px;
+            color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+            max-height: 180px; overflow-y: auto; line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>☑️ &lt;vcl-vertical-checkboxlist&gt;</h1>
+    <p>Port de <code>TVerticalCheckBoxList</code> / <code>TVerticalCheckBoxItem</code> · Lista vertical con filtrado/búsqueda en tiempo real</p>
+</div>
+
+<!-- ── Test 1: Lista con Búsqueda ────────────────────────────────────────── -->
+<div class="card">
+    <h2>1. Lista de Opciones con Búsqueda en Vivo</h2>
+    <vcl-vertical-checkboxlist id="test-vchk" searchable placeholder="Buscar módulo...">
+        <vcl-vertical-checkbox value="core" checked>Módulo VCL Core</vcl-vertical-checkbox>
+        <vcl-vertical-checkbox value="shadow" checked>Shadow DOM v1 Encapsulation</vcl-vertical-checkbox>
+        <vcl-vertical-checkbox value="events">Custom Events Reactive</vcl-vertical-checkbox>
+        <vcl-vertical-checkbox value="svg">SVG Vector Graphics</vcl-vertical-checkbox>
+        <vcl-vertical-checkbox value="forms">Form Elements Validation</vcl-vertical-checkbox>
+        <vcl-vertical-checkbox value="tables">DataGrids and Datasets</vcl-vertical-checkbox>
+    </vcl-vertical-checkboxlist>
+    <div class="controls">
+        <button onclick="alert('Seleccionados: ' + JSON.stringify(document.getElementById('test-vchk').selectedValues))">Obtener Seleccionados</button>
+        <button onclick="toggleDisabled()">Alternar Disabled</button>
+    </div>
+</div>
+
+<!-- ── Test 2: Monitor de Eventos ────────────────────────────────────────── -->
+<div class="card">
+    <h2>2. Monitor de Eventos (<code>vcl-change</code>)</h2>
+    <div class="console-box" id="console">
+        <div>[SYS] Marca o desmarca opciones de la lista...</div>
+    </div>
+</div>
+
+<script type="module">
+    import '/web-components/index.ts';
+
+    const consoleEl = document.getElementById('console');
+
+    document.addEventListener('vcl-change', (e) => {
+        if (e.target.tagName === 'VCL-VERTICAL-CHECKBOXLIST') {
+            const time = new Date().toLocaleTimeString();
+            const row = document.createElement('div');
+            row.innerHTML = `[${time}] <span style="color:#f472b6;">vcl-change</span>: <b style="color:#4ade80;">${JSON.stringify(e.detail.selectedValues)}</b>`;
+            consoleEl.prepend(row);
+        }
+    });
+
+    window.toggleDisabled = function() {
+        const el = document.getElementById('test-vchk');
+        if (el.hasAttribute('disabled')) el.removeAttribute('disabled');
+        else el.setAttribute('disabled', '');
+    };
+</script>
+</body>
+</html>

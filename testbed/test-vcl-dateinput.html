@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-dateinput&gt; & &lt;vcl-datebutton&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc; color: #1a202c;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: #fff; padding: 28px 32px; border-radius: 14px;
+            margin-bottom: 28px; box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #bfdbfe; font-size: 14px; }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 {
+            margin: 0 0 20px; font-size: 16px; font-weight: 600; color: #374151;
+            border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
+        }
+        .row { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .row label { font-size: 12px; font-weight: 600; color: #6b7280; min-width: 160px; }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+        button {
+            padding: 7px 14px; font-size: 12.5px; font-weight: 500;
+            border-radius: 6px; border: 1px solid #d1d5db; background: #fff;
+            cursor: pointer; transition: all 0.15s; font-family: inherit; color: #374151;
+        }
+        button:hover { background: #f3f4f6; border-color: #9ca3af; }
+        .console-box {
+            background: #0f172a; border-radius: 10px; padding: 16px;
+            color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+            max-height: 180px; overflow-y: auto; line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>📅 &lt;vcl-dateinput&gt;, &lt;vcl-datebutton&gt;, &lt;vcl-timeinput&gt;</h1>
+    <p>Port de <code>TDateInput</code>, <code>TDateButton</code>, <code>TInputTime</code> · Selectores temporales nativos con popover interactivo (0% jQuery)</p>
+</div>
+
+<!-- ── Test 1: DateInput y DateButton ────────────────────────────────────── -->
+<div class="card">
+    <h2>1. Selectores de Fecha con Calendario Nativo</h2>
+    <div class="row">
+        <label>Input con Popover:</label>
+        <vcl-dateinput id="test-dateinput" placeholder="YYYY-MM-DD" value="2026-08-07"></vcl-dateinput>
+    </div>
+    <div class="row">
+        <label>Botón Disparador:</label>
+        <vcl-datebutton id="test-datebtn" text="Elegir Fecha de Despacho"></vcl-datebutton>
+    </div>
+    <div class="row">
+        <label>Selector de Hora:</label>
+        <vcl-timeinput id="test-timeinput" value="15:45"></vcl-timeinput>
+    </div>
+</div>
+
+<!-- ── Test 2: Control Programático ──────────────────────────────────────── -->
+<div class="card">
+    <h2>2. Control Programático de Fecha</h2>
+    <div class="controls">
+        <button onclick="document.getElementById('test-dateinput').value = '2026-12-25'">Navidad (2026-12-25)</button>
+        <button onclick="document.getElementById('test-dateinput').value = '2026-01-01'">Año Nuevo (2026-01-01)</button>
+        <button onclick="document.getElementById('test-dateinput').value = ''">Limpiar Fecha</button>
+        <button onclick="toggleAttr('test-dateinput', 'disabled')">Disabled</button>
+    </div>
+</div>
+
+<!-- ── Test 3: Monitor de Eventos ────────────────────────────────────────── -->
+<div class="card">
+    <h2>3. Monitor de Eventos (<code>vcl-change</code>, <code>vcl-input</code>)</h2>
+    <div class="console-box" id="console">
+        <div>[SYS] Selecciona una fecha en el calendario o cambia la hora...</div>
+    </div>
+</div>
+
+<script type="module">
+    import '/web-components/index.ts';
+
+    const consoleEl = document.getElementById('console');
+
+    function log(type, target, detail) {
+        const time = new Date().toLocaleTimeString();
+        const row = document.createElement('div');
+        row.innerHTML = `[${time}] <span style="color:#f472b6;">${type}</span> en &lt;${target}&gt;: <b style="color:#4ade80;">${JSON.stringify(detail)}</b>`;
+        consoleEl.prepend(row);
+    }
+
+    document.addEventListener('vcl-change', (e) => {
+        const tag = e.target.tagName.toLowerCase();
+        if (tag.includes('date') || tag.includes('time')) {
+            log('vcl-change', tag, e.detail);
+        }
+    });
+
+    window.toggleAttr = function(id, attr) {
+        const el = document.getElementById(id);
+        if (el.hasAttribute(attr)) el.removeAttribute(attr);
+        else el.setAttribute(attr, '');
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-popup-menu&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc; color: #1a202c;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: #fff; padding: 28px 32px; border-radius: 14px;
+            margin-bottom: 28px; box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #cbd5e1; font-size: 14px; }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 {
+            margin: 0 0 20px; font-size: 16px; font-weight: 600; color: #374151;
+            border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
+        }
+        .context-zone {
+            padding: 32px; background: #f1f5f9; border: 2px dashed #cbd5e1;
+            border-radius: 10px; text-align: center; cursor: context-menu;
+            user-select: none; transition: background 0.15s;
+        }
+        .context-zone:hover { background: #e2e8f0; }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+        button {
+            padding: 7px 14px; font-size: 12.5px; font-weight: 500;
+            border-radius: 6px; border: 1px solid #d1d5db; background: #fff;
+            cursor: pointer; transition: all 0.15s; font-family: inherit; color: #374151;
+        }
+        button:hover { background: #f3f4f6; border-color: #9ca3af; }
+        .console-box {
+            background: #0f172a; border-radius: 10px; padding: 16px;
+            color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+            max-height: 180px; overflow-y: auto; line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>📋 &lt;vcl-popup-menu&gt;</h1>
+    <p>Port de <code>TPopup</code> / <code>TMenuItem</code> · Menú contextual emergente (clic derecho o disparador) con atajos y separadores</p>
+</div>
+
+<!-- ── Test 1: Menú Contextual ───────────────────────────────────────────── -->
+<div class="card">
+    <h2>1. Menú Contextual por Clic Derecho</h2>
+    <div class="context-zone" id="zone-1">
+        <h3 style="margin:0; font-size:16px; color:#1e293b;">🖱️ Haz Clic Derecho Dentro de Esta Zona</h3>
+        <p style="margin:4px 0 0; font-size:13px; color:#64748b;">Abre el menú contextual nativo y emite el evento vcl-select al hacer clic en un elemento.</p>
+    </div>
+
+    <vcl-popup-menu id="menu-1" target="#zone-1" trigger="contextmenu">
+        <vcl-menu-item id="act-edit" text="Editar Registro" icon="✏️" shortcut="Ctrl+E"></vcl-menu-item>
+        <vcl-menu-item id="act-duplicate" text="Duplicar Fila" icon="📋" shortcut="Ctrl+D"></vcl-menu-item>
+        <vcl-menu-item separator></vcl-menu-item>
+        <vcl-menu-item id="act-export" text="Exportar a CSV" icon="📊"></vcl-menu-item>
+        <vcl-menu-item separator></vcl-menu-item>
+        <vcl-menu-item id="act-delete" text="Eliminar Registro" icon="🗑️" shortcut="Del"></vcl-menu-item>
+    </vcl-popup-menu>
+
+    <div class="controls">
+        <button onclick="document.getElementById('menu-1').showAt(250, 250)">showAt(250, 250)</button>
+        <button onclick="document.getElementById('menu-1').close()">close()</button>
+    </div>
+</div>
+
+<!-- ── Test 2: Monitor de Eventos ────────────────────────────────────────── -->
+<div class="card">
+    <h2>2. Monitor de Eventos (<code>vcl-select</code>, <code>vcl-open</code>, <code>vcl-close</code>)</h2>
+    <div class="console-box" id="console">
+        <div>[SYS] Abre el menú contextual o selecciona una opción...</div>
+    </div>
+</div>
+
+<script type="module">
+    import '/web-components/index.ts';
+
+    const consoleEl = document.getElementById('console');
+
+    function log(type, detail) {
+        const time = new Date().toLocaleTimeString();
+        const row = document.createElement('div');
+        row.innerHTML = `[${time}] <span style="color:#f472b6;">${type}</span>: <b style="color:#4ade80;">${typeof detail === 'object' ? JSON.stringify(detail) : detail}</b>`;
+        consoleEl.prepend(row);
+    }
+
+    document.addEventListener('vcl-select', (e) => {
+        if (e.target.tagName === 'VCL-POPUP-MENU') {
+            log('vcl-select', e.detail.item);
+        }
+    });
+
+    document.addEventListener('vcl-open', (e) => {
+        if (e.target.tagName === 'VCL-POPUP-MENU') log('vcl-open', 'Menú abierto');
+    });
+
+    document.addEventListener('vcl-close', (e) => {
+        if (e.target.tagName === 'VCL-POPUP-MENU') log('vcl-close', 'Menú cerrado');
+    });
+</script>
+</body>
+</html>

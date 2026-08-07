@@ -158,6 +158,7 @@
             overflow: hidden;
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
             border: 1px solid #1e293b;
+            margin-top: 24px;
         }
 
         .console-header {
@@ -221,33 +222,33 @@
 </head>
 <body>
 
-    <!-- REGLA DE ORO VCL: Todo componente VCL se monta dentro de un <vcl-page> como padre ancestro obligatorio -->
     <vcl-page title="VCL.JS Web Components - Interactive Test Bed">
         
         <div class="hero-banner">
             <div>
                 <h1 class="hero-title">⚡ Test Bed Harness — VCL.JS Web Components</h1>
-                <p class="hero-subtitle">Entorno de verificación interactivo para probar el Shadow DOM, encapsulamiento CSS y Custom Events.</p>
+                <p class="hero-subtitle">Entorno de verificación interactivo para probar Shadow DOM v1, Custom Elements v1 y eventos nativos.</p>
             </div>
             <div class="badge-group">
                 <span class="tech-pill">0% JQuery</span>
                 <span class="tech-pill">W3C Custom Elements v1</span>
                 <span class="tech-pill">Shadow DOM v1</span>
+                <span class="tech-pill">Fase 4 Activa</span>
             </div>
         </div>
 
         <div class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-label">Componentes Listos</div>
-                <div class="metric-value" id="metric-components">8</div>
+                <div class="metric-value" id="metric-components">43</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Eventos Capturados</div>
                 <div class="metric-value" id="metric-events">0</div>
             </div>
             <div class="metric-card">
-                <div class="metric-label">Salud del Framework</div>
-                <div class="metric-value" style="color: var(--success);">100%</div>
+                <div class="metric-label">Fases Completadas</div>
+                <div class="metric-value" style="color: var(--success);">4 / 6</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Contenedor Raíz</div>
@@ -255,73 +256,148 @@
             </div>
         </div>
 
+        <!-- SECCIÓN DE COMPONENTES FASE 4: ENTRADAS AVANZADAS, SLIDERS, FECHAS, MEDIDORES Y POPUPS -->
         <div class="section-grid">
             
+            <!-- Deslizador Numérico y Deslizador de Rango -->
             <div class="test-card">
                 <div class="test-card-header">
-                    <h3 class="test-card-title">1. Etiquetas e Insignias (&lt;vcl-label&gt;, &lt;vcl-badge&gt;)</h3>
+                    <h3 class="test-card-title">1. Deslizadores (&lt;vcl-slider&gt;, &lt;vcl-rangeslider&gt;)</h3>
                 </div>
-                <div class="control-row">
-                    <vcl-label text="Etiqueta Normal"></vcl-label>
-                    <vcl-label text="Éxito" label-style="success"></vcl-label>
-                    <vcl-label text="Advertencia" label-style="warning"></vcl-label>
-                    <vcl-label text="Crítico" label-style="important"></vcl-label>
-                    <vcl-label text="Info" label-style="info"></vcl-label>
+                <div style="margin-bottom: 16px;">
+                    <span style="font-size: 12px; font-weight: 600; color: #64748b;">Deslizador Simple con Tooltip y Step (0 - 100):</span>
+                    <vcl-slider id="slider-demo" min="0" max="100" value="45" step="5" show-tooltip></vcl-slider>
                 </div>
-                <div class="control-row" style="margin-top: 14px;">
-                    <vcl-badge text="v1.0.0" badge-style="info"></vcl-badge>
-                    <vcl-badge text="Online" badge-style="success"></vcl-badge>
-                    <vcl-badge text="99+ Alertas" badge-style="important"></vcl-badge>
-                    <vcl-badge text="Pendiente" badge-style="warning"></vcl-badge>
-                </div>
-                <div class="interactive-bar">
-                    <button class="btn-action" id="btn-toggle-badge">Alternar Estilo Badge</button>
+                <div>
+                    <span style="font-size: 12px; font-weight: 600; color: #64748b;">Deslizador de Rango Doble (Min-Max: 20 a 80):</span>
+                    <vcl-rangeslider id="rangeslider-demo" min="0" max="100" start-value="20" end-value="80" show-tooltip color="success"></vcl-rangeslider>
                 </div>
             </div>
 
+            <!-- Calificación y Medidor SVG (Gauge) -->
             <div class="test-card">
                 <div class="test-card-header">
-                    <h3 class="test-card-title">2. Entradas de Texto Reactivas (&lt;vcl-input&gt;)</h3>
+                    <h3 class="test-card-title">2. Calificación y Medidor Radial (&lt;vcl-rating&gt;, &lt;vcl-gauge&gt;)</h3>
                 </div>
-                <div class="control-row">
-                    <vcl-input id="input-search" placeholder="Escribe para disparar vcl-change..."></vcl-input>
-                </div>
-                <div class="control-row">
-                    <vcl-input placeholder="Campo Deshabilitado" disabled></vcl-input>
-                </div>
-                <div class="interactive-bar">
-                    <button class="btn-action" id="btn-set-input">Establecer Texto vía JS</button>
+                <div class="control-row" style="align-items: center; justify-content: space-around;">
+                    <div>
+                        <span style="display:block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 4px;">Puntuación (5 Estrellas con Media):</span>
+                        <vcl-rating id="rating-demo" max="5" value="4.5" size="md" allow-half></vcl-rating>
+                    </div>
+                    <div>
+                        <vcl-gauge id="gauge-demo" min="0" max="100" value="72" units="km/h" title="VELOCIDAD" warning-threshold="65" critical-threshold="85"></vcl-gauge>
+                    </div>
                 </div>
             </div>
 
+            <!-- Selector de Fecha, Botón de Fecha y Hora -->
             <div class="test-card">
                 <div class="test-card-header">
-                    <h3 class="test-card-title">3. Botones con Eventos (&lt;vcl-button&gt;)</h3>
+                    <h3 class="test-card-title">3. Fecha y Hora (&lt;vcl-dateinput&gt;, &lt;vcl-datebutton&gt;, &lt;vcl-timeinput&gt;)</h3>
                 </div>
                 <div class="control-row">
-                    <vcl-button text="Guardar" button-style="primary" id="btn-demo-1"></vcl-button>
-                    <vcl-button text="Aprobar" button-style="success" id="btn-demo-2"></vcl-button>
-                    <vcl-button text="Eliminar" button-style="danger" id="btn-demo-3"></vcl-button>
-                    <vcl-button text="Deshabilitado" disabled></vcl-button>
-                </div>
-                <div class="interactive-bar">
-                    <button class="btn-action" id="btn-toggle-disable">Deshabilitar/Habilitar Botón</button>
+                    <vcl-dateinput id="dateinput-demo" placeholder="Seleccionar Fecha..." value="2026-08-07"></vcl-dateinput>
+                    <vcl-datebutton id="datebtn-demo" text="Fecha de Entrega"></vcl-datebutton>
+                    <vcl-timeinput id="timeinput-demo" value="14:30"></vcl-timeinput>
                 </div>
             </div>
 
+            <!-- Lista de Checkboxes Vertical y Chip/Pillbox Input -->
             <div class="test-card">
                 <div class="test-card-header">
-                    <h3 class="test-card-title">4. Paneles Contenedores (&lt;vcl-panel&gt;)</h3>
+                    <h3 class="test-card-title">4. Lista Filtrable y Píldoras (&lt;vcl-vertical-checkboxlist&gt;, &lt;vcl-pillbox&gt;)</h3>
                 </div>
-                <vcl-panel header-title="Información del Proyecto VCL.JS" panel-style="primary">
-                    <p style="margin: 0; font-size: 13px; color: #4a5568;">
-                        Los componentes montados dentro de este panel usan la ranura nativa <code>&lt;slot&gt;</code> de HTML5 y Shadow DOM v1.
-                    </p>
-                </vcl-panel>
+                <div style="margin-bottom: 12px;">
+                    <vcl-vertical-checkboxlist id="vchk-demo" searchable placeholder="Filtrar módulos...">
+                        <vcl-vertical-checkbox value="core" checked>Módulo Core VCL</vcl-vertical-checkbox>
+                        <vcl-vertical-checkbox value="shadow" checked>Shadow DOM Encapsulation</vcl-vertical-checkbox>
+                        <vcl-vertical-checkbox value="events">Custom Events Dispatcher</vcl-vertical-checkbox>
+                        <vcl-vertical-checkbox value="charts">Vector Charts SVG</vcl-vertical-checkbox>
+                    </vcl-vertical-checkboxlist>
+                </div>
+                <div>
+                    <span style="font-size: 12px; font-weight: 600; color: #64748b;">Chips / Tags Input:</span>
+                    <vcl-pillbox id="pillbox-demo" placeholder="Agregar tag y presionar Enter..." color="primary">
+                        <vcl-pillbox-item>TypeScript</vcl-pillbox-item>
+                        <vcl-pillbox-item>WebComponents</vcl-pillbox-item>
+                        <vcl-pillbox-item>ZeroJQuery</vcl-pillbox-item>
+                    </vcl-pillbox>
+                </div>
+            </div>
+
+            <!-- Nube de Etiquetas (TagCloud) y Menú Contextual (Popup Menu) -->
+            <div class="test-card">
+                <div class="test-card-header">
+                    <h3 class="test-card-title">5. Tag Cloud y Menú Contextual (&lt;vcl-tagcloud&gt;, &lt;vcl-popup-menu&gt;)</h3>
+                </div>
+                <vcl-tagcloud id="tagcloud-demo" min-font-size="13" max-font-size="28">
+                    <vcl-tagcloud-item weight="5" color="#3182ce">VCL.JS</vcl-tagcloud-item>
+                    <vcl-tagcloud-item weight="9" color="#10b981">WebComponents</vcl-tagcloud-item>
+                    <vcl-tagcloud-item weight="3" color="#f59e0b">ShadowDOM</vcl-tagcloud-item>
+                    <vcl-tagcloud-item weight="7" color="#8b5cf6">TypeScript</vcl-tagcloud-item>
+                    <vcl-tagcloud-item weight="4" color="#ec4899">ModernUI</vcl-tagcloud-item>
+                </vcl-tagcloud>
+
+                <div style="margin-top: 14px; padding: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; text-align: center;" id="menu-target-area">
+                    <span style="font-size: 13px; color: #475569;">🖱️ Haz clic derecho aquí para abrir el <b>&lt;vcl-popup-menu&gt;</b></span>
+                </div>
+
+                <vcl-popup-menu id="popup-demo" target="#menu-target-area" trigger="contextmenu">
+                    <vcl-menu-item id="act-edit" text="Editar Registro" icon="✏️" shortcut="Ctrl+E"></vcl-menu-item>
+                    <vcl-menu-item id="act-duplicate" text="Duplicar" icon="📋" shortcut="Ctrl+D"></vcl-menu-item>
+                    <vcl-menu-item separator></vcl-menu-item>
+                    <vcl-menu-item id="act-delete" text="Eliminar" icon="🗑️" shortcut="Del"></vcl-menu-item>
+                </vcl-popup-menu>
+            </div>
+
+            <!-- Carrusel de Diapositivas -->
+            <div class="test-card">
+                <div class="test-card-header">
+                    <h3 class="test-card-title">6. Carrusel Nativo (&lt;vcl-carousel&gt;)</h3>
+                </div>
+                <vcl-carousel id="carousel-demo" autoplay interval="3500">
+                    <vcl-carousel-page>
+                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center;">
+                            <h4 style="margin: 0; font-size: 18px;">Diapositiva 1: 100% Nativo</h4>
+                            <p style="margin: 6px 0 0 0; font-size: 13px; opacity: 0.9;">Custom Elements v1 sin dependencias externas</p>
+                        </div>
+                    </vcl-carousel-page>
+                    <vcl-carousel-page>
+                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #10b981, #047857); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center;">
+                            <h4 style="margin: 0; font-size: 18px;">Diapositiva 2: Shadow DOM v1</h4>
+                            <p style="margin: 6px 0 0 0; font-size: 13px; opacity: 0.9;">Encapsulación total de CSS y renderizado rápido</p>
+                        </div>
+                    </vcl-carousel-page>
+                    <vcl-carousel-page>
+                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center;">
+                            <h4 style="margin: 0; font-size: 18px;">Diapositiva 3: Reactividad de Eventos</h4>
+                            <p style="margin: 6px 0 0 0; font-size: 13px; opacity: 0.9;">Eventos Custom burbujeantes con detalle tipado</p>
+                        </div>
+                    </vcl-carousel-page>
+                </vcl-carousel>
+            </div>
+
+            <!-- Cuadrícula de Widgets Dashboard -->
+            <div class="test-card" style="grid-column: 1 / -1;">
+                <div class="test-card-header">
+                    <h3 class="test-card-title">7. Dashboard Widgets Grid (&lt;vcl-widget-grid&gt;, &lt;vcl-widget-panel&gt;)</h3>
+                </div>
+                <vcl-widget-grid columns="3">
+                    <vcl-widget-panel title="Rendimiento del Sistema" icon="⚡" closable>
+                        <p style="margin: 0; font-size: 13px; color: #475569;">Carga del CPU al 14%, memoria asignada 256MB sin fugas de Shadow DOM.</p>
+                    </vcl-widget-panel>
+                    <vcl-widget-panel title="Estado de Migración" icon="📊" closable>
+                        <p style="margin: 0; font-size: 13px; color: #475569;">Fase 4 completada exitosamente. Listo para la Fase 5 (Datasets y DBGrid).</p>
+                    </vcl-widget-panel>
+                    <vcl-widget-panel title="Terminal de Diagnóstico" icon="💻" closable>
+                        <p style="margin: 0; font-size: 13px; color: #475569;">Todos los Custom Elements registrados en el DOM.</p>
+                    </vcl-widget-panel>
+                </vcl-widget-grid>
             </div>
 
         </div>
 
+        <!-- TERMINAL CONSOLE -->
         <div class="console-container">
             <div class="console-header">
                 <div class="console-dots">
@@ -333,7 +409,7 @@
                 <button class="btn-action" id="btn-clear-console" style="background:#334155; color:#fff; border:none; padding:2px 8px;">Limpiar</button>
             </div>
             <div class="console-body" id="console-output">
-                <div class="log-entry"><span class="log-timestamp">[SYS]</span> Escuchando eventos burbujeantes desde el Shadow DOM...</div>
+                <div class="log-entry"><span class="log-timestamp">[SYS]</span> Escuchando eventos reactivos (vcl-change, vcl-input, vcl-select, vcl-add, vcl-open)...</div>
             </div>
         </div>
 
@@ -357,32 +433,29 @@
             consoleEl.prepend(logEntry);
         }
 
-        document.addEventListener('vcl-click', (e) => {
-            const tag = e.target.tagName.toLowerCase();
-            const txt = e.target.getAttribute('text') || 'Botón';
-            appendLog('vcl-click', tag, `text="${txt}"`);
-        });
-
         document.addEventListener('vcl-change', (e) => {
             const tag = e.target.tagName.toLowerCase();
-            appendLog('vcl-change', tag, `val="${e.detail.value}"`);
+            appendLog('vcl-change', tag, JSON.stringify(e.detail));
         });
 
-        document.getElementById('btn-set-input').addEventListener('click', () => {
-            const input = document.getElementById('input-search');
-            input.value = '¡Texto establecido dinámicamente!';
+        document.addEventListener('vcl-input', (e) => {
+            const tag = e.target.tagName.toLowerCase();
+            appendLog('vcl-input', tag, JSON.stringify(e.detail));
         });
 
-        document.getElementById('btn-toggle-badge').addEventListener('click', () => {
-            const badge = document.querySelector('vcl-badge');
-            const currentStyle = badge.getAttribute('badge-style');
-            badge.setAttribute('badge-style', currentStyle === 'success' ? 'important' : 'success');
+        document.addEventListener('vcl-select', (e) => {
+            const tag = e.target.tagName.toLowerCase();
+            appendLog('vcl-select', tag, JSON.stringify(e.detail));
         });
 
-        document.getElementById('btn-toggle-disable').addEventListener('click', () => {
-            const btn = document.getElementById('btn-demo-1');
-            if (btn.hasAttribute('disabled')) btn.removeAttribute('disabled');
-            else btn.setAttribute('disabled', '');
+        document.addEventListener('vcl-add', (e) => {
+            const tag = e.target.tagName.toLowerCase();
+            appendLog('vcl-add', tag, JSON.stringify(e.detail));
+        });
+
+        document.addEventListener('vcl-open', (e) => {
+            const tag = e.target.tagName.toLowerCase();
+            appendLog('vcl-open', tag, 'Menú abierto');
         });
 
         document.getElementById('btn-clear-console').addEventListener('click', () => {

@@ -3,23 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VCL.JS Web Components - Interactive Test Bed Harness</title>
+    <title>VCL.JS — Web Components Developer Test Bed Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-page: #f8fafc;
-            --card-bg: #ffffff;
-            --primary: #3182ce;
-            --primary-dark: #2b6cb0;
-            --success: #38a169;
-            --warning: #d69e2e;
-            --danger: #e53e3e;
-            --text-main: #1a202c;
-            --text-muted: #718096;
-            --border-color: #e2e8f0;
+            --bg-card: #ffffff;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
         }
+
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -30,13 +38,21 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .hero-banner {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        /* ── Top Header & Hero ─────────────────────────────────────────── */
+        .studio-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #090d16 100%);
             color: #ffffff;
             padding: 24px 32px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1440px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -44,348 +60,853 @@
             gap: 16px;
         }
 
-        .hero-title {
+        .brand-title {
             margin: 0;
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .hero-subtitle {
-            margin: 6px 0 0 0;
-            color: #94a3b8;
-            font-size: 14px;
-        }
-
-        .badge-group {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .tech-pill {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #38bdf8;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .metric-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 16px 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-        }
-
-        .metric-value {
-            font-size: 28px;
+        .brand-pill {
+            background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+            color: #ffffff;
+            font-size: 11px;
             font-weight: 700;
-            color: var(--primary);
-            margin: 4px 0 0 0;
-        }
-
-        .metric-label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 20px;
             letter-spacing: 0.5px;
-            color: var(--text-muted);
+            text-transform: uppercase;
         }
 
-        .section-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        .test-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
-        }
-
-        .test-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .test-card-title {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .control-row {
+        .header-stats {
             display: flex;
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
-            margin-bottom: 12px;
         }
 
-        .console-container {
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-badge b { color: #38bdf8; }
+
+        /* ── Main Layout ───────────────────────────────────────────────── */
+        .studio-layout {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px 32px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 28px;
+        }
+
+        @media (max-width: 1024px) {
+            .studio-layout {
+                grid-template-columns: 1fr;
+                padding: 16px;
+            }
+            .studio-sidebar {
+                position: static !important;
+            }
+        }
+
+        /* ── Sidebar Navigation ────────────────────────────────────────── */
+        .studio-sidebar {
+            position: sticky;
+            top: 100px;
+            height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 34px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #ffffff;
+            outline: none;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .nav-categories {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.15s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .nav-item .count {
+            font-size: 11px;
+            background: rgba(0,0,0,0.06);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        /* ── Component Cards Grid ──────────────────────────────────────── */
+        .components-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .category-section {
+            scroll-margin-top: 110px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .category-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .category-count {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 20px;
+        }
+
+        .component-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .component-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-hover);
+        }
+
+        .card-header {
+            padding: 12px 16px;
+            background: #fafbfc;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tag-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .legacy-tag {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-body {
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+            background: #ffffff;
+        }
+
+        .card-actions {
+            padding: 10px 16px;
+            background: #fafbfc;
+            border-top: 1px dashed var(--border);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .dev-btn {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            color: #334155;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .dev-btn:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: var(--primary);
+        }
+
+        .dev-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ── Event Console Panel ───────────────────────────────────────── */
+        .terminal-panel {
             background: #0f172a;
             border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-lg);
             border: 1px solid #1e293b;
+            overflow: hidden;
+            margin-top: 32px;
         }
 
-        .console-header {
+        .terminal-bar {
             background: #1e293b;
             padding: 10px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #94a3b8;
-            font-size: 13px;
-            font-family: 'JetBrains Mono', monospace;
             border-bottom: 1px solid #334155;
         }
 
-        .console-dots {
+        .terminal-title {
+            color: #94a3b8;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             display: flex;
-            gap: 6px;
+            align-items: center;
+            gap: 8px;
         }
 
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .dot-red { background: #ef4444; }
-        .dot-yellow { background: #f59e0b; }
-        .dot-green { background: #10b981; }
-
-        .console-body {
-            padding: 16px;
+        .terminal-body {
+            padding: 14px 16px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
+            font-size: 12.5px;
             color: #38bdf8;
-            max-height: 220px;
+            max-height: 260px;
             overflow-y: auto;
             line-height: 1.6;
         }
 
-        .log-entry { margin: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
-        .log-timestamp { color: #64748b; margin-right: 8px; }
-        .log-tag { color: #f472b6; font-weight: 600; }
-        .log-val { color: #4ade80; }
-
-        .interactive-bar {
+        .log-row {
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
             display: flex;
-            gap: 10px;
-            margin-top: 16px;
-            padding-top: 12px;
-            border-top: 1px dashed var(--border-color);
+            gap: 8px;
+            align-items: baseline;
         }
 
-        .btn-action {
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: #ffffff;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .btn-action:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        .log-time { color: #64748b; font-size: 11px; }
+        .log-event { color: #f472b6; font-weight: 600; }
+        .log-source { color: #a78bfa; }
+        .log-detail { color: #4ade80; }
     </style>
 </head>
 <body>
 
-    <vcl-page title="VCL.JS Web Components - Interactive Test Bed">
+    <!-- TOP HEADER -->
+    <header class="studio-header">
+        <div class="header-content">
+            <h1 class="brand-title">
+                ⚡ VCL.JS Web Components
+                <span class="brand-pill">Test Bed Studio</span>
+            </h1>
+            <div class="header-stats">
+                <div class="stat-badge">Componentes: <b>43 Registrados</b></div>
+                <div class="stat-badge">Eventos Capturados: <b id="stat-events">0</b></div>
+                <div class="stat-badge">jQuery: <b style="color: #10b981;">0% Eliminado</b></div>
+                <div class="stat-badge">Fases: <b style="color: #10b981;">4 / 6 Completadas</b></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="studio-layout">
         
-        <div class="hero-banner">
-            <div>
-                <h1 class="hero-title">⚡ Test Bed Harness — VCL.JS Web Components</h1>
-                <p class="hero-subtitle">Entorno de verificación interactivo para probar el Shadow DOM, encapsulamiento CSS y Custom Events.</p>
-            </div>
-            <div class="badge-group">
-                <span class="tech-pill">0% JQuery</span>
-                <span class="tech-pill">W3C Custom Elements v1</span>
-                <span class="tech-pill">Shadow DOM v1</span>
-            </div>
-        </div>
-
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-label">Componentes Listos</div>
-                <div class="metric-value" id="metric-components">8</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Eventos Capturados</div>
-                <div class="metric-value" id="metric-events">0</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Salud del Framework</div>
-                <div class="metric-value" style="color: var(--success);">100%</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Contenedor Raíz</div>
-                <div class="metric-value" style="font-size: 20px; color: #8b5cf6;">&lt;vcl-page&gt;</div>
-            </div>
-        </div>
-
-        <div class="section-grid">
-            
-            <div class="test-card">
-                <div class="test-card-header">
-                    <h3 class="test-card-title">1. Etiquetas e Insignias (&lt;vcl-label&gt;, &lt;vcl-badge&gt;)</h3>
-                </div>
-                <div class="control-row">
-                    <vcl-label text="Etiqueta Normal"></vcl-label>
-                    <vcl-label text="Éxito" label-style="success"></vcl-label>
-                    <vcl-label text="Advertencia" label-style="warning"></vcl-label>
-                    <vcl-label text="Crítico" label-style="important"></vcl-label>
-                    <vcl-label text="Info" label-style="info"></vcl-label>
-                </div>
-                <div class="control-row" style="margin-top: 14px;">
-                    <vcl-badge text="v1.0.0" badge-style="info"></vcl-badge>
-                    <vcl-badge text="Online" badge-style="success"></vcl-badge>
-                    <vcl-badge text="99+ Alertas" badge-style="important"></vcl-badge>
-                    <vcl-badge text="Pendiente" badge-style="warning"></vcl-badge>
-                </div>
-                <div class="interactive-bar">
-                    <button class="btn-action" id="btn-toggle-badge">Alternar Estilo Badge</button>
-                </div>
+        <!-- SIDEBAR -->
+        <aside class="studio-sidebar">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="component-filter" placeholder="Filtrar componentes...">
             </div>
 
-            <div class="test-card">
-                <div class="test-card-header">
-                    <h3 class="test-card-title">2. Entradas de Texto Reactivas (&lt;vcl-input&gt;)</h3>
-                </div>
-                <div class="control-row">
-                    <vcl-input id="input-search" placeholder="Escribe para disparar vcl-change..."></vcl-input>
-                </div>
-                <div class="control-row">
-                    <vcl-input placeholder="Campo Deshabilitado" disabled></vcl-input>
-                </div>
-                <div class="interactive-bar">
-                    <button class="btn-action" id="btn-set-input">Establecer Texto vía JS</button>
-                </div>
-            </div>
+            <nav class="nav-categories">
+                <a href="#cat-fase4" class="nav-item active">
+                    <span>🚀 Fase 4: Entradas y Sliders</span>
+                    <span class="count">13</span>
+                </a>
+                <a href="#cat-fase3" class="nav-item">
+                    <span>📐 Fase 3: Layout y Navegación</span>
+                    <span class="count">15</span>
+                </a>
+                <a href="#cat-fase2" class="nav-item">
+                    <span>📝 Fase 2: Formularios y Botones</span>
+                    <span class="count">15</span>
+                </a>
+                <a href="#cat-console" class="nav-item">
+                    <span>💻 Terminal de Eventos</span>
+                    <span class="count">Live</span>
+                </a>
+            </nav>
+        </aside>
 
-            <div class="test-card">
-                <div class="test-card-header">
-                    <h3 class="test-card-title">3. Botones con Eventos (&lt;vcl-button&gt;)</h3>
-                </div>
-                <div class="control-row">
-                    <vcl-button text="Guardar" button-style="primary" id="btn-demo-1"></vcl-button>
-                    <vcl-button text="Aprobar" button-style="success" id="btn-demo-2"></vcl-button>
-                    <vcl-button text="Eliminar" button-style="danger" id="btn-demo-3"></vcl-button>
-                    <vcl-button text="Deshabilitado" disabled></vcl-button>
-                </div>
-                <div class="interactive-bar">
-                    <button class="btn-action" id="btn-toggle-disable">Deshabilitar/Habilitar Botón</button>
-                </div>
-            </div>
+        <!-- MAIN COMPONENTS FEED -->
+        <main class="components-feed">
 
-            <div class="test-card">
-                <div class="test-card-header">
-                    <h3 class="test-card-title">4. Paneles Contenedores (&lt;vcl-panel&gt;)</h3>
+            <!-- ════════════════════════════════════════════════════════════════
+                 FASE 4: ENTRADAS AVANZADAS, SLIDERS, FECHAS, MEDIDORES Y POPUPS
+            ════════════════════════════════════════════════════════════════ -->
+            <section id="cat-fase4" class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🚀 Fase 4: Entradas Avanzadas, Deslizadores, Fechas y Medidores</h2>
+                    <span class="category-count">13 Componentes</span>
                 </div>
-                <vcl-panel header-title="Información del Proyecto VCL.JS" panel-style="primary">
-                    <p style="margin: 0; font-size: 13px; color: #4a5568;">
-                        Los componentes montados dentro de este panel usan la ranura nativa <code>&lt;slot&gt;</code> de HTML5 y Shadow DOM v1.
-                    </p>
-                </vcl-panel>
-            </div>
 
-        </div>
+                <div class="component-grid">
 
-        <div class="console-container">
-            <div class="console-header">
-                <div class="console-dots">
-                    <span class="dot dot-red"></span>
-                    <span class="dot dot-yellow"></span>
-                    <span class="dot dot-green"></span>
+                    <!-- 1. VCL-SLIDER -->
+                    <div class="component-card" data-name="slider">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-slider&gt;</h3>
+                            <span class="legacy-tag">TSlider</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-slider id="test-slider" min="0" max="100" value="45" step="5" show-tooltip></vcl-slider>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-slider').value = 75">Val: 75</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-slider').value = 20">Val: 20</button>
+                            <button class="dev-btn" onclick="toggleAttr('test-slider', 'disabled')">Disabled</button>
+                        </div>
+                    </div>
+
+                    <!-- 2. VCL-RANGESLIDER -->
+                    <div class="component-card" data-name="rangeslider">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-rangeslider&gt;</h3>
+                            <span class="legacy-tag">TRangeSlider</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-rangeslider id="test-rangeslider" min="0" max="100" start-value="25" end-value="75" show-tooltip color="success"></vcl-rangeslider>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="const r = document.getElementById('test-rangeslider'); r.startValue = 10; r.endValue = 90;">10 - 90</button>
+                            <button class="dev-btn" onclick="const r = document.getElementById('test-rangeslider'); r.startValue = 40; r.endValue = 60;">40 - 60</button>
+                            <button class="dev-btn" onclick="toggleAttr('test-rangeslider', 'disabled')">Disabled</button>
+                        </div>
+                    </div>
+
+                    <!-- 3. VCL-RATING -->
+                    <div class="component-card" data-name="rating">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-rating&gt;</h3>
+                            <span class="legacy-tag">TRatingStart</span>
+                        </div>
+                        <div class="card-body" style="align-items: center;">
+                            <vcl-rating id="test-rating" max="5" value="4.5" size="md" allow-half></vcl-rating>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-rating').value = 5">5★</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-rating').value = 3.5">3.5★</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-rating').value = 1">1★</button>
+                            <button class="dev-btn" onclick="toggleAttr('test-rating', 'readonly')">ReadOnly</button>
+                        </div>
+                    </div>
+
+                    <!-- 4. VCL-GAUGE -->
+                    <div class="component-card" data-name="gauge">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-gauge&gt;</h3>
+                            <span class="legacy-tag">TGauge</span>
+                        </div>
+                        <div class="card-body" style="align-items: center;">
+                            <vcl-gauge id="test-gauge" min="0" max="120" value="68" units="km/h" title="VELOCIDAD" warning-threshold="80" critical-threshold="105"></vcl-gauge>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-gauge').value = 45">Normal (45)</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-gauge').value = 88">Alerta (88)</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-gauge').value = 115">Crítico (115)</button>
+                        </div>
+                    </div>
+
+                    <!-- 5. VCL-DATEINPUT -->
+                    <div class="component-card" data-name="dateinput">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-dateinput&gt;</h3>
+                            <span class="legacy-tag">TDateInput</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-dateinput id="test-dateinput" placeholder="YYYY-MM-DD" value="2026-08-07"></vcl-dateinput>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-dateinput').value = '2026-12-31'">31 Dic</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-dateinput').value = ''">Limpiar</button>
+                            <button class="dev-btn" onclick="toggleAttr('test-dateinput', 'disabled')">Disabled</button>
+                        </div>
+                    </div>
+
+                    <!-- 6. VCL-DATEBUTTON -->
+                    <div class="component-card" data-name="datebutton">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-datebutton&gt;</h3>
+                            <span class="legacy-tag">TDateButton</span>
+                        </div>
+                        <div class="card-body" style="align-items: flex-start;">
+                            <vcl-datebutton id="test-datebtn" text="Fecha de Despacho"></vcl-datebutton>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-datebtn').setAttribute('value', '2026-09-15')">15 Sep</button>
+                            <button class="dev-btn" onclick="toggleAttr('test-datebtn', 'disabled')">Disabled</button>
+                        </div>
+                    </div>
+
+                    <!-- 7. VCL-TIMEINPUT -->
+                    <div class="component-card" data-name="timeinput">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-timeinput&gt;</h3>
+                            <span class="legacy-tag">TInputTime</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-timeinput id="test-timeinput" value="14:30"></vcl-timeinput>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-timeinput').setAttribute('value', '09:00')">09:00</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-timeinput').setAttribute('value', '18:45')">18:45</button>
+                        </div>
+                    </div>
+
+                    <!-- 8. VCL-PILLBOX -->
+                    <div class="component-card" data-name="pillbox">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-pillbox&gt;</h3>
+                            <span class="legacy-tag">TPillBox (Chips)</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-pillbox id="test-pillbox" placeholder="Escribe y presiona Enter o Tab..." color="primary">
+                                <vcl-pillbox-item>TypeScript</vcl-pillbox-item>
+                                <vcl-pillbox-item>WebComponents</vcl-pillbox-item>
+                            </vcl-pillbox>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-pillbox').addTag('ShadowDOM')">+ ShadowDOM</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-pillbox').addTag('VCL.JS')">+ VCL.JS</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-pillbox').tags = []">Limpiar</button>
+                        </div>
+                    </div>
+
+                    <!-- 9. VCL-VERTICAL-CHECKBOXLIST -->
+                    <div class="component-card" data-name="vertical-checkboxlist">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-vertical-checkboxlist&gt;</h3>
+                            <span class="legacy-tag">TVerticalCheckBoxList</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-vertical-checkboxlist id="test-vchk" searchable placeholder="Filtrar opciones...">
+                                <vcl-vertical-checkbox value="core" checked>Módulo Core</vcl-vertical-checkbox>
+                                <vcl-vertical-checkbox value="dom" checked>Shadow DOM</vcl-vertical-checkbox>
+                                <vcl-vertical-checkbox value="events">Event Dispatcher</vcl-vertical-checkbox>
+                                <vcl-vertical-checkbox value="charts">SVG Charts</vcl-vertical-checkbox>
+                            </vcl-vertical-checkboxlist>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="alert('Seleccionados: ' + JSON.stringify(document.getElementById('test-vchk').selectedValues))">Ver Seleccionados</button>
+                        </div>
+                    </div>
+
+                    <!-- 10. VCL-TAGCLOUD -->
+                    <div class="component-card" data-name="tagcloud">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-tagcloud&gt;</h3>
+                            <span class="legacy-tag">TTagCloud</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-tagcloud id="test-tagcloud" min-font-size="12" max-font-size="28">
+                                <vcl-tagcloud-item weight="9" color="#2563eb">WebComponents</vcl-tagcloud-item>
+                                <vcl-tagcloud-item weight="6" color="#10b981">TypeScript</vcl-tagcloud-item>
+                                <vcl-tagcloud-item weight="3" color="#f59e0b">ShadowDOM</vcl-tagcloud-item>
+                                <vcl-tagcloud-item weight="7" color="#8b5cf6">VCL.JS</vcl-tagcloud-item>
+                                <vcl-tagcloud-item weight="4" color="#ec4899">ModernUI</vcl-tagcloud-item>
+                            </vcl-tagcloud>
+                        </div>
+                        <div class="card-actions">
+                            <span style="font-size: 11px; color: var(--text-muted);">Haz clic en un tag para probar el evento vcl-select</span>
+                        </div>
+                    </div>
+
+                    <!-- 11. VCL-CAROUSEL -->
+                    <div class="component-card" data-name="carousel" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-carousel&gt;</h3>
+                            <span class="legacy-tag">TCarousel</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-carousel id="test-carousel" autoplay interval="3000">
+                                <vcl-carousel-page>
+                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center;">
+                                        <h4 style="margin: 0; font-size: 20px;">⚡ Diapositiva 1: 100% Nativo</h4>
+                                        <p style="margin: 6px 0 0 0; opacity: 0.9;">Custom Elements v1 sin dependencias externas.</p>
+                                    </div>
+                                </vcl-carousel-page>
+                                <vcl-carousel-page>
+                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #10b981, #047857); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center;">
+                                        <h4 style="margin: 0; font-size: 20px;">🛡️ Diapositiva 2: Shadow DOM v1</h4>
+                                        <p style="margin: 6px 0 0 0; opacity: 0.9;">Encapsulación total de CSS y renderizado de alto rendimiento.</p>
+                                    </div>
+                                </vcl-carousel-page>
+                                <vcl-carousel-page>
+                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center;">
+                                        <h4 style="margin: 0; font-size: 20px;">🎯 Diapositiva 3: Eventos Reactivos</h4>
+                                        <p style="margin: 6px 0 0 0; opacity: 0.9;">Eventos Custom burbujeantes con detalle tipado.</p>
+                                    </div>
+                                </vcl-carousel-page>
+                            </vcl-carousel>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-carousel').prev()">◀ Anterior</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-carousel').next()">Siguiente ▶</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-carousel').goTo(1)">Ir a Diapositiva 2</button>
+                        </div>
+                    </div>
+
+                    <!-- 12. VCL-POPUP-MENU -->
+                    <div class="component-card" data-name="popupmenu">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-popup-menu&gt;</h3>
+                            <span class="legacy-tag">TPopup</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="demo-context-area" style="padding: 24px; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; text-align: center; cursor: context-menu;">
+                                <span style="font-size: 13px; font-weight: 600; color: #475569;">🖱️ Haz clic derecho aquí para probar el menú contextual</span>
+                            </div>
+                            <vcl-popup-menu id="test-popup" target="#demo-context-area" trigger="contextmenu">
+                                <vcl-menu-item id="item-edit" text="Editar Registro" icon="✏️" shortcut="Ctrl+E"></vcl-menu-item>
+                                <vcl-menu-item id="item-clone" text="Duplicar" icon="📋" shortcut="Ctrl+D"></vcl-menu-item>
+                                <vcl-menu-item separator></vcl-menu-item>
+                                <vcl-menu-item id="item-delete" text="Eliminar Registro" icon="🗑️" shortcut="Del"></vcl-menu-item>
+                            </vcl-popup-menu>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-popup').showAt(300, 300)">Abrir en (300, 300)</button>
+                        </div>
+                    </div>
+
+                    <!-- 13. VCL-WIDGET-GRID -->
+                    <div class="component-card" data-name="widget-grid" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-widget-grid&gt;</h3>
+                            <span class="legacy-tag">TWidgetGrid / TWdgetPanel</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-widget-grid columns="2">
+                                <vcl-widget-panel title="Métricas de Memoria" icon="📊" closable>
+                                    <p style="margin: 0; font-size: 13px; color: #475569;">0 memory leaks en Shadow DOM v1. Tiempo de primer render: 4ms.</p>
+                                </vcl-widget-panel>
+                                <vcl-widget-panel title="Estado de Migración" icon="⚡" closable>
+                                    <p style="margin: 0; font-size: 13px; color: #475569;">Fase 4 lista. Preparado para Fase 5 (Datasets y DBGrid).</p>
+                                </vcl-widget-panel>
+                            </vcl-widget-grid>
+                        </div>
+                    </div>
+
                 </div>
-                <div>TERMINAL CONSOLE — VCL CUSTOM EVENTS MONITOR</div>
-                <button class="btn-action" id="btn-clear-console" style="background:#334155; color:#fff; border:none; padding:2px 8px;">Limpiar</button>
-            </div>
-            <div class="console-body" id="console-output">
-                <div class="log-entry"><span class="log-timestamp">[SYS]</span> Escuchando eventos burbujeantes desde el Shadow DOM...</div>
-            </div>
-        </div>
+            </section>
 
-    </vcl-page>
+            <!-- ════════════════════════════════════════════════════════════════
+                 FASE 3: LAYOUT, PANELES, NAVEGACIÓN, ÁRBOLES Y DIÁLOGOS
+            ════════════════════════════════════════════════════════════════ -->
+            <section id="cat-fase3" class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">📐 Fase 3: Layout, Navegación, Paneles y Listas</h2>
+                    <span class="category-count">15 Componentes</span>
+                </div>
+
+                <div class="component-grid">
+
+                    <!-- VCL-ALERT -->
+                    <div class="component-card" data-name="alert">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-alert&gt;</h3>
+                            <span class="legacy-tag">TAlert</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-alert alert-type="success" text="Operación completada con éxito."></vcl-alert>
+                            <vcl-alert alert-type="important" text="Advertencia crítica en el sistema."></vcl-alert>
+                        </div>
+                    </div>
+
+                    <!-- VCL-PROGRESSBAR -->
+                    <div class="component-card" data-name="progressbar">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-progressbar&gt;</h3>
+                            <span class="legacy-tag">TProgressBar</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-progressbar id="test-pb" min="0" max="100" value="65" show-label bar-style="primary"></vcl-progressbar>
+                        </div>
+                        <div class="card-actions">
+                            <button class="dev-btn" onclick="document.getElementById('test-pb').setAttribute('value', '90')">90%</button>
+                            <button class="dev-btn" onclick="document.getElementById('test-pb').setAttribute('value', '30')">30%</button>
+                        </div>
+                    </div>
+
+                    <!-- VCL-BREADCRUMB & PAGINATION -->
+                    <div class="component-card" data-name="breadcrumb">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-breadcrumb&gt; & &lt;vcl-pagination&gt;</h3>
+                            <span class="legacy-tag">TBreadCrumb / TPagination</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-breadcrumb>
+                                <vcl-breadcrumb-item href="#">Inicio</vcl-breadcrumb-item>
+                                <vcl-breadcrumb-item href="#">VCL</vcl-breadcrumb-item>
+                                <vcl-breadcrumb-item active>Web Components</vcl-breadcrumb-item>
+                            </vcl-breadcrumb>
+                            <div style="margin-top: 12px;">
+                                <vcl-pagination total-pages="8" current-page="3"></vcl-pagination>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VCL-TREEVIEW -->
+                    <div class="component-card" data-name="treeview">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-treeview&gt;</h3>
+                            <span class="legacy-tag">TTree</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-treeview id="test-tree">
+                                <vcl-treenode text="src" expanded>
+                                    <vcl-treenode text="components" expanded>
+                                        <vcl-treenode text="vcl-slider.ts"></vcl-treenode>
+                                        <vcl-treenode text="vcl-rating.ts"></vcl-treenode>
+                                    </vcl-treenode>
+                                    <vcl-treenode text="core">
+                                        <vcl-treenode text="VCLCoreElement.ts"></vcl-treenode>
+                                    </vcl-treenode>
+                                </vcl-treenode>
+                            </vcl-treeview>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ════════════════════════════════════════════════════════════════
+                 FASE 2: FORMULARIOS, TEXTO, BOTONES Y CONTROLES BÁSICOS
+            ════════════════════════════════════════════════════════════════ -->
+            <section id="cat-fase2" class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">📝 Fase 2: Formularios, Texto, Botones y Controles Básicos</h2>
+                    <span class="category-count">15 Componentes</span>
+                </div>
+
+                <div class="component-grid">
+
+                    <!-- VCL-BUTTON -->
+                    <div class="component-card" data-name="button">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-button&gt;</h3>
+                            <span class="legacy-tag">TButton</span>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <vcl-button text="Primario" button-style="primary"></vcl-button>
+                                <vcl-button text="Éxito" button-style="success"></vcl-button>
+                                <vcl-button text="Peligro" button-style="danger"></vcl-button>
+                                <vcl-button text="Deshabilitado" disabled></vcl-button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VCL-INPUT & VCL-INPUT-NUMERIC -->
+                    <div class="component-card" data-name="input">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-input&gt; & &lt;vcl-input-numeric&gt;</h3>
+                            <span class="legacy-tag">TInput / TInputNumeric</span>
+                        </div>
+                        <div class="card-body">
+                            <vcl-input placeholder="Escribe texto aquí..."></vcl-input>
+                            <vcl-input-numeric placeholder="Monto numérico..." value="1250.50"></vcl-input-numeric>
+                        </div>
+                    </div>
+
+                    <!-- VCL-CHECKBOX, RADIO & TOGGLESWITCH -->
+                    <div class="component-card" data-name="checkbox">
+                        <div class="card-header">
+                            <h3 class="tag-name">&lt;vcl-checkbox&gt;, &lt;vcl-radiobutton&gt;, &lt;vcl-toggleswitch&gt;</h3>
+                            <span class="legacy-tag">TCheckBox / TRadioButton / TToggleSwitch</span>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                                <vcl-checkbox text="Aceptar términos" checked></vcl-checkbox>
+                                <vcl-radiobutton name="group1" text="Opción A" checked></vcl-radiobutton>
+                                <vcl-toggleswitch checked></vcl-toggleswitch>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ════════════════════════════════════════════════════════════════
+                 TERMINAL CONSOLE
+            ════════════════════════════════════════════════════════════════ -->
+            <section id="cat-console" class="category-section">
+                <div class="terminal-panel">
+                    <div class="terminal-bar">
+                        <div class="terminal-title">
+                            <span>🟢</span>
+                            <span>TERMINAL CONSOLE — VCL CUSTOM EVENTS MONITOR</span>
+                        </div>
+                        <button class="dev-btn" id="btn-clear-terminal" style="background:#334155; color:#fff; border:none;">Limpiar Log</button>
+                    </div>
+                    <div class="terminal-body" id="terminal-output">
+                        <div class="log-row">
+                            <span class="log-time">[SYS]</span>
+                            <span class="log-detail">Sistema listo. Escuchando eventos burbujeantes de 43 Web Components...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
 
     <script type="module">
         import '/web-components/index.ts';
 
         let eventCount = 0;
-        const consoleEl = document.getElementById('console-output');
-        const metricEventsEl = document.getElementById('metric-events');
+        const terminalEl = document.getElementById('terminal-output');
+        const statEventsEl = document.getElementById('stat-events');
 
-        function appendLog(eventType, targetTag, detailStr) {
+        window.toggleAttr = function(id, attr) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (el.hasAttribute(attr)) el.removeAttribute(attr);
+            else el.setAttribute(attr, '');
+        };
+
+        function logEvent(type, target, detail) {
             eventCount++;
-            metricEventsEl.textContent = eventCount;
+            statEventsEl.textContent = eventCount;
 
             const time = new Date().toLocaleTimeString();
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry';
-            logEntry.innerHTML = `<span class="log-timestamp">[${time}]</span> <span class="log-tag">${eventType}</span> de &lt;${targetTag}&gt;: <span class="log-val">${detailStr}</span>`;
-            consoleEl.prepend(logEntry);
+            const row = document.createElement('div');
+            row.className = 'log-row';
+            row.innerHTML = `
+                <span class="log-time">[${time}]</span>
+                <span class="log-event">${type}</span>
+                <span class="log-source">&lt;${target}&gt;</span>
+                <span class="log-detail">${typeof detail === 'object' ? JSON.stringify(detail) : detail}</span>
+            `;
+            terminalEl.prepend(row);
         }
 
-        document.addEventListener('vcl-click', (e) => {
-            const tag = e.target.tagName.toLowerCase();
-            const txt = e.target.getAttribute('text') || 'Botón';
-            appendLog('vcl-click', tag, `text="${txt}"`);
+        // Escuchadores de eventos unificados
+        const events = ['vcl-click', 'vcl-change', 'vcl-input', 'vcl-select', 'vcl-add', 'vcl-remove', 'vcl-open', 'vcl-close', 'vcl-hover', 'vcl-collapse'];
+        events.forEach(evt => {
+            document.addEventListener(evt, (e) => {
+                const tag = e.target.tagName.toLowerCase();
+                logEvent(evt, tag, e.detail || {});
+            });
         });
 
-        document.addEventListener('vcl-change', (e) => {
-            const tag = e.target.tagName.toLowerCase();
-            appendLog('vcl-change', tag, `val="${e.detail.value}"`);
+        // Filtro de búsqueda en tiempo real
+        document.getElementById('component-filter').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.component-card');
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name') || '';
+                const text = card.textContent.toLowerCase();
+                if (!term || name.includes(term) || text.includes(term)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
 
-        document.getElementById('btn-set-input').addEventListener('click', () => {
-            const input = document.getElementById('input-search');
-            input.value = '¡Texto establecido dinámicamente!';
-        });
-
-        document.getElementById('btn-toggle-badge').addEventListener('click', () => {
-            const badge = document.querySelector('vcl-badge');
-            const currentStyle = badge.getAttribute('badge-style');
-            badge.setAttribute('badge-style', currentStyle === 'success' ? 'important' : 'success');
-        });
-
-        document.getElementById('btn-toggle-disable').addEventListener('click', () => {
-            const btn = document.getElementById('btn-demo-1');
-            if (btn.hasAttribute('disabled')) btn.removeAttribute('disabled');
-            else btn.setAttribute('disabled', '');
-        });
-
-        document.getElementById('btn-clear-console').addEventListener('click', () => {
-            consoleEl.innerHTML = '<div class="log-entry"><span class="log-timestamp">[SYS]</span> Consola reiniciada.</div>';
+        document.getElementById('btn-clear-terminal').addEventListener('click', () => {
+            terminalEl.innerHTML = '<div class="log-row"><span class="log-time">[SYS]</span> Consola reiniciada.</div>';
         });
     </script>
 </body>
