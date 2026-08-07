@@ -2,38 +2,301 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VCL.JS - Test &lt;vcl-tabpanel&gt;</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: #f8fafc; color: #1a202c; }
-        .hero-banner { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; padding: 24px 32px; border-radius: 12px; margin-bottom: 24px; }
-        .test-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; }
+        :root {
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #3182ce;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: #1a202c;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 24px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-title { margin: 0; font-size: 24px; font-weight: 700; }
+        .hero-subtitle { margin: 6px 0 0 0; color: #94a3b8; font-size: 14px; }
+
+        .test-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .test-card-title {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .btn-action {
+            padding: 7px 14px;
+            font-size: 12.5px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-right: 6px;
+            margin-top: 6px;
+            font-family: inherit;
+        }
+        .btn-action:hover { background: #edf2f7; color: #2b6cb0; border-color: #cbd5e1; }
+
+        .delphi-canvas-container {
+            background-color: #f0f0f0;
+            background-image: radial-gradient(#9ca3af 1px, transparent 1px);
+            background-size: 8px 8px;
+            padding: 32px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .console-container {
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+            margin-top: 24px;
+        }
+
+        .console-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .console-body {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #38bdf8;
+            max-height: 180px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
-    <vcl-page title="Prueba &lt;vcl-tabpanel&gt;">
+
+    <vcl-page title="Prueba <vcl-tabpanel> (Delphi TPageControl)">
+
         <div class="hero-banner">
-            <h1 style="margin:0;">📑 Componente: &lt;vcl-tabpanel&gt;</h1>
-            <p style="margin:6px 0 0 0; color:#94a3b8;">Migración de TTabPanel a Custom Element (0% JQuery).</p>
+            <h1 class="hero-title">📑 Componente: &lt;vcl-tabpanel&gt; (TPageControl / TTabControl)</h1>
+            <p class="hero-subtitle">
+                Identificación visual clara de pestañas con bordes nítidos, pestaña activa integrada, soporte de iconos, badges, pestañas cerrables y fidelidad al diseño de Delphi VCL.
+            </p>
         </div>
 
+        <!-- SECCIÓN 1: Fiel recreación de Delphi TPageControl (Como en la imagen adjunta) -->
         <div class="test-card">
-            <vcl-tabpanel>
-                <vcl-tabsheet tab-title="Perfil" active>
-                    <p style="margin:0;">Contenido de la pestaña Perfil.</p>
+            <h2 class="test-card-title">1. Recreación Exacta de Delphi VCL TPageControl (TabSheet1, TabSheet2, TabSheet3)</h2>
+            <p style="font-size:14px; color:#4a5568;">
+                Visualización sobre lienzo punteado característico de Delphi Form Designer. Pestaña activa elevada con unión perfecta a la hoja de contenido y pestañas inactivas claramente delimitadas:
+            </p>
+
+            <div class="delphi-canvas-container">
+                <vcl-tabpanel id="delphi-demo-tabs" tab-style="delphi">
+                    <vcl-tabsheet tab-title="TabSheet1" active>
+                        <h4 style="margin:0 0 8px 0; color:#1e293b;">Página Activa: TabSheet1</h4>
+                        <p style="margin:0; color:#475569; font-size:14px;">
+                            Esta pestaña está en primer plano. El borde inferior se fusiona perfectamente con el cuerpo del contenedor sin líneas de corte, respetando la identidad de Delphi TPageControl.
+                        </p>
+                    </vcl-tabsheet>
+
+                    <vcl-tabsheet tab-title="TabSheet2">
+                        <h4 style="margin:0 0 8px 0; color:#1e293b;">Página Secundaria: TabSheet2</h4>
+                        <p style="margin:0; color:#475569; font-size:14px;">
+                            Contenido del TabSheet2 con opciones de configuración del formulario.
+                        </p>
+                    </vcl-tabsheet>
+
+                    <vcl-tabsheet tab-title="TabSheet3">
+                        <h4 style="margin:0 0 8px 0; color:#1e293b;">Página Terciaria: TabSheet3</h4>
+                        <p style="margin:0; color:#475569; font-size:14px;">
+                            Contenido del TabSheet3 para auditoría y logs.
+                        </p>
+                    </vcl-tabsheet>
+                </vcl-tabpanel>
+            </div>
+
+            <!-- Controles Interactivos -->
+            <div style="margin-top:16px; padding-top:16px; border-top:1px dashed var(--border-color);">
+                <button class="btn-action" id="btn-prev-tab">⬅️ Pestaña Anterior</button>
+                <button class="btn-action" id="btn-next-tab">Pestaña Siguiente ➡️</button>
+                <button class="btn-action" id="btn-select-tab2">Seleccionar TabSheet2</button>
+                <button class="btn-action" id="btn-add-tab">➕ Agregar Nueva Pestaña Dinámica</button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: Pestañas con Iconos, Badges, Cierre y Estado Deshabilitado -->
+        <div class="test-card">
+            <h2 class="test-card-title">2. Pestañas Ricas: Iconos, Badges, Cerrables y Deshabilitadas</h2>
+            <vcl-tabpanel id="rich-tabs" tab-style="delphi">
+                <vcl-tabsheet tab-title="Perfil de Usuario" icon="👤" badge="OK" badge-style="success" active>
+                    <p style="margin:0; font-size:14px; color:#475569;">
+                        Pestaña con icono de usuario y badge de estado verde.
+                    </p>
                 </vcl-tabsheet>
-                <vcl-tabsheet tab-title="Seguridad">
-                    <p style="margin:0;">Contenido de la pestaña Seguridad.</p>
+
+                <vcl-tabsheet tab-title="Notificaciones" icon="🔔" badge="4" badge-style="danger">
+                    <p style="margin:0; font-size:14px; color:#475569;">
+                        Pestaña con badge contador de 4 alertas pendientes.
+                    </p>
                 </vcl-tabsheet>
-                <vcl-tabsheet tab-title="Notificaciones">
-                    <p style="margin:0;">Contenido de la pestaña Notificaciones.</p>
+
+                <vcl-tabsheet tab-title="Documento Temporal" icon="📄" closable>
+                    <p style="margin:0; font-size:14px; color:#475569;">
+                        Esta pestaña tiene botón de cierre (×) individual. Al cerrarla se emite el evento <code>vcl-tab-close</code>.
+                    </p>
+                </vcl-tabsheet>
+
+                <vcl-tabsheet tab-title="Opciones Avanzadas" icon="🔒" disabled>
+                    <p style="margin:0; font-size:14px; color:#475569;">
+                        Pestaña deshabilitada (no seleccionable ni por clic ni por teclado).
+                    </p>
                 </vcl-tabsheet>
             </vcl-tabpanel>
         </div>
+
+        <!-- SECCIÓN 3: Variantes de Estilo (Modern, Card, Pills) -->
+        <div class="test-card">
+            <h2 class="test-card-title">3. Variantes de Estilo Preset (tab-style)</h2>
+
+            <h4 style="margin:16px 0 8px 0; color:#475569;">Variante "modern" (Acento azul superior y sombras suaves):</h4>
+            <vcl-tabpanel tab-style="modern">
+                <vcl-tabsheet tab-title="Dashboard" icon="📊" active>
+                    <p style="margin:0; font-size:14px; color:#475569;">Resumen métrico con pestaña moderna.</p>
+                </vcl-tabsheet>
+                <vcl-tabsheet tab-title="Reportes" icon="📈">
+                    <p style="margin:0; font-size:14px; color:#475569;">Generación de reportes ejecutivos.</p>
+                </vcl-tabsheet>
+                <vcl-tabsheet tab-title="Configuración" icon="⚙️">
+                    <p style="margin:0; font-size:14px; color:#475569;">Ajustes del sistema.</p>
+                </vcl-tabsheet>
+            </vcl-tabpanel>
+
+            <h4 style="margin:24px 0 8px 0; color:#475569;">Variante "pills" (Botones redondeados tipo selector):</h4>
+            <vcl-tabpanel tab-style="pills">
+                <vcl-tabsheet tab-title="Todos" badge="24" active>
+                    <p style="margin:0; font-size:14px; color:#475569;">Mostrando todos los 24 elementos registrados.</p>
+                </vcl-tabsheet>
+                <vcl-tabsheet tab-title="Activos" badge="18" badge-style="success">
+                    <p style="margin:0; font-size:14px; color:#475569;">Elementos actualmente en operación.</p>
+                </vcl-tabsheet>
+                <vcl-tabsheet tab-title="Archivados" badge="6" badge-style="warning">
+                    <p style="margin:0; font-size:14px; color:#475569;">Elementos en histórico.</p>
+                </vcl-tabsheet>
+            </vcl-tabpanel>
+        </div>
+
+        <!-- SECCIÓN 4: Posición Inferior (tab-position="bottom" - Delphi tpBottom) -->
+        <div class="test-card">
+            <h2 class="test-card-title">4. Posición de Pestañas Inferior (tab-position="bottom")</h2>
+            <p style="font-size:14px; color:#4a5568;">
+                Equivalente a la propiedad <code>TabPosition := tpBottom</code> de Delphi TPageControl:
+            </p>
+            <vcl-tabpanel tab-position="bottom" tab-style="delphi">
+                <vcl-tabsheet tab-title="Editor de Código" icon="💻" active>
+                    <p style="margin:0; font-size:14px; color:#475569;">
+                        Vista de edición principal con barra de pestañas ubicada en la parte inferior.
+                    </p>
+                </vcl-tabsheet>
+                <vcl-tabsheet tab-title="Consola de Salida" icon="🖥️">
+                    <p style="margin:0; font-size:14px; color:#475569;">
+                        Salida de compilación y trazas de depuración.
+                    </p>
+                </vcl-tabsheet>
+                <vcl-tabsheet tab-title="Variables y Watch" icon="🔍">
+                    <p style="margin:0; font-size:14px; color:#475569;">
+                        Inspección de variables en tiempo de ejecución.
+                    </p>
+                </vcl-tabsheet>
+            </vcl-tabpanel>
+        </div>
+
+        <!-- Consola de Eventos -->
+        <div class="console-container">
+            <div class="console-header">
+                <div>MONITOR DE EVENTOS &lt;vcl-tabpanel&gt;</div>
+            </div>
+            <div class="console-body" id="console-log">
+                <div>[SYS] Monitoreando eventos de cambio y cierre de pestañas...</div>
+            </div>
+        </div>
+
     </vcl-page>
 
     <script type="module">
         import '/web-components/index.ts';
+
+        const delphiTabs = document.getElementById('delphi-demo-tabs');
+        const consoleLog = document.getElementById('console-log');
+        let newTabCounter = 4;
+
+        function appendLog(msg) {
+            const time = new Date().toLocaleTimeString();
+            consoleLog.innerHTML = `<div>[${time}] ${msg}</div>` + consoleLog.innerHTML;
+        }
+
+        document.getElementById('btn-prev-tab').addEventListener('click', () => {
+            delphiTabs.previousTab();
+        });
+
+        document.getElementById('btn-next-tab').addEventListener('click', () => {
+            delphiTabs.nextTab();
+        });
+
+        document.getElementById('btn-select-tab2').addEventListener('click', () => {
+            delphiTabs.selectTab(1);
+        });
+
+        document.getElementById('btn-add-tab').addEventListener('click', () => {
+            const title = `TabSheet${newTabCounter++}`;
+            delphiTabs.addTab(title, `<p style="margin:0; color:#2b6cb0;">¡Contenido dinámico de la pestaña <strong>${title}</strong> creada por API!</p>`, {
+                closable: true,
+                active: true
+            });
+            appendLog(`Pestaña '${title}' agregada dinámicamente.`);
+        });
+
+        document.addEventListener('vcl-tab-change', (e) => {
+            appendLog(`Evento 'vcl-tab-change': Índice ${e.detail.index} → "${e.detail.title}"`);
+        });
+
+        document.addEventListener('vcl-tab-close', (e) => {
+            appendLog(`Evento 'vcl-tab-close': Cerrando pestaña "${e.detail.title}"`);
+        });
     </script>
 </body>
 </html>
