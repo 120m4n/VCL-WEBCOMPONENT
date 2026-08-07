@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-treeview&gt; &amp; &lt;vcl-treenode&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc; color: #1a202c;
+        }
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #065f46 100%);
+            color: #fff; padding: 28px 32px; border-radius: 14px;
+            margin-bottom: 28px; box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #6ee7b7; font-size: 14px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 {
+            margin: 0 0 16px; font-size: 16px; font-weight: 600; color: #374151;
+            border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
+        }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        button {
+            padding: 7px 14px; font-size: 12.5px; font-weight: 500;
+            border-radius: 6px; border: 1px solid #d1d5db; background: #fff;
+            cursor: pointer; transition: all 0.15s; font-family: inherit; color: #374151;
+        }
+        button:hover { background: #f3f4f6; }
+        .log {
+            background: #0f172a; color: #4ade80; padding: 10px 14px;
+            border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; min-height: 36px; margin-top: 12px;
+        }
+        pre {
+            background: #1e293b; color: #e2e8f0; padding: 14px 16px;
+            border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; line-height: 1.6; overflow-x: auto; margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>🌳 &lt;vcl-treeview&gt; &amp; &lt;vcl-treenode&gt;</h1>
+    <p>Port de <code>TTreeView / TTreeNode</code> · Delphi 4 comctrls.pas · Navegación por teclado + Checkboxes</p>
+</div>
+
+<div class="grid">
+    <!-- ── Test 1: Árbol de archivos ──────────────────────────────────────── -->
+    <div class="card">
+        <h2>1. Árbol de archivos (con iconos)</h2>
+        <vcl-treeview id="tv1">
+            <vcl-treenode text="Proyecto VCL.JS" expanded icon="📁" expanded-icon="📂">
+                <vcl-treenode text="src" expanded icon="📁" expanded-icon="📂">
+                    <vcl-treenode text="index.ts" icon="📄"></vcl-treenode>
+                    <vcl-treenode text="main.ts" icon="📄"></vcl-treenode>
+                    <vcl-treenode text="components" icon="📁" expanded-icon="📂">
+                        <vcl-treenode text="toolbar.ts" icon="📄"></vcl-treenode>
+                        <vcl-treenode text="statusbar.ts" icon="📄"></vcl-treenode>
+                    </vcl-treenode>
+                </vcl-treenode>
+                <vcl-treenode text="testbed" icon="📁" expanded-icon="📂">
+                    <vcl-treenode text="test-toolbar.html" icon="📄"></vcl-treenode>
+                </vcl-treenode>
+                <vcl-treenode text="package.json" icon="📄"></vcl-treenode>
+            </vcl-treenode>
+        </vcl-treeview>
+        <div class="log" id="log1">Selecciona un nodo...</div>
+    </div>
+
+    <!-- ── Test 2: Checkboxes ─────────────────────────────────────────────── -->
+    <div class="card">
+        <h2>2. Árbol con casillas de verificación</h2>
+        <vcl-treeview id="tv2" checkboxes>
+            <vcl-treenode text="Módulos del sistema" expanded>
+                <vcl-treenode text="Cartografía" checked></vcl-treenode>
+                <vcl-treenode text="Reportes"></vcl-treenode>
+                <vcl-treenode text="Administración" expanded>
+                    <vcl-treenode text="Usuarios" checked></vcl-treenode>
+                    <vcl-treenode text="Roles"></vcl-treenode>
+                    <vcl-treenode text="Auditoría" checked></vcl-treenode>
+                </vcl-treenode>
+                <vcl-treenode text="Configuración"></vcl-treenode>
+            </vcl-treenode>
+        </vcl-treeview>
+        <div class="controls">
+            <button onclick="getChecked()">Obtener marcados</button>
+        </div>
+        <div class="log" id="log2">Selecciona nodos...</div>
+    </div>
+</div>
+
+<!-- ── Test 3: Árbol profundo ────────────────────────────────────────────── -->
+<div class="card">
+    <h2>3. Árbol de organización jerárquica</h2>
+    <vcl-treeview id="tv3">
+        <vcl-treenode text="🏢 Empresa Global S.A." expanded>
+            <vcl-treenode text="🏬 División Norte" expanded>
+                <vcl-treenode text="🏭 Planta Monterrey">
+                    <vcl-treenode text="👷 Producción"></vcl-treenode>
+                    <vcl-treenode text="🔧 Mantenimiento"></vcl-treenode>
+                </vcl-treenode>
+                <vcl-treenode text="🏭 Planta Guadalajara">
+                    <vcl-treenode text="👷 Producción"></vcl-treenode>
+                </vcl-treenode>
+            </vcl-treenode>
+            <vcl-treenode text="🏬 División Sur">
+                <vcl-treenode text="🏭 Planta CDMX">
+                    <vcl-treenode text="👷 Producción"></vcl-treenode>
+                    <vcl-treenode text="📊 Control de calidad"></vcl-treenode>
+                </vcl-treenode>
+            </vcl-treenode>
+            <vcl-treenode text="📋 Corporativo">
+                <vcl-treenode text="💼 Recursos Humanos" disabled></vcl-treenode>
+                <vcl-treenode text="💰 Finanzas"></vcl-treenode>
+                <vcl-treenode text="🖥️ TI"></vcl-treenode>
+            </vcl-treenode>
+        </vcl-treenode>
+    </vcl-treeview>
+    <div class="controls">
+        <button onclick="expandAll('tv3')">Expandir todo</button>
+        <button onclick="collapseAll('tv3')">Colapsar todo</button>
+    </div>
+    <div class="log" id="log3">Selecciona un nodo...</div>
+</div>
+
+<!-- ── Referencia ────────────────────────────────────────────────────────── -->
+<div class="card">
+    <h2>Referencia de código · Teclado</h2>
+    <pre>&lt;vcl-treeview checkboxes&gt;
+  &lt;vcl-treenode text="Padre" expanded icon="📁" expanded-icon="📂"&gt;
+    &lt;vcl-treenode text="Hijo A" checked&gt;&lt;/vcl-treenode&gt;
+    &lt;vcl-treenode text="Hijo B" disabled&gt;&lt;/vcl-treenode&gt;
+  &lt;/vcl-treenode&gt;
+&lt;/vcl-treeview&gt;
+
+Teclado:
+  ArrowDown / ArrowUp  → Navegar entre nodos visibles
+  ArrowRight           → Expandir nodo / entrar al primer hijo
+  ArrowLeft            → Colapsar / subir al nodo padre
+  Space                → Alternar checkbox (si checkboxes=true)
+  Enter                → Seleccionar nodo
+
+Eventos: vcl-tree-select, vcl-tree-expand, vcl-tree-collapse</pre>
+</div>
+
+<script type="module">
+    import '../web-components/index.ts';
+
+    document.addEventListener('vcl-tree-select', (e) => {
+        const node = e.detail.node;
+        const treeId = node.closest('vcl-treeview')?.id;
+        const log = document.getElementById('log' + treeId?.replace('tv', ''));
+        if (log) log.textContent = `vcl-tree-select → "${node.text}"`;
+    });
+
+    document.addEventListener('vcl-tree-expand', (e) => {
+        const node = e.detail.node;
+        const treeId = node.closest('vcl-treeview')?.id;
+        const log = document.getElementById('log' + treeId?.replace('tv', ''));
+        if (log) log.textContent = `vcl-tree-expand  → "${node.text}"`;
+    });
+
+    document.addEventListener('vcl-tree-collapse', (e) => {
+        const node = e.detail.node;
+        const treeId = node.closest('vcl-treeview')?.id;
+        const log = document.getElementById('log' + treeId?.replace('tv', ''));
+        if (log) log.textContent = `vcl-tree-collapse → "${node.text}"`;
+    });
+
+    window.getChecked = () => {
+        const tv = document.getElementById('tv2');
+        const checked = Array.from(tv.querySelectorAll('vcl-treenode[checked]'))
+            .map(n => n.getAttribute('text') || n.getAttribute('caption') || '');
+        document.getElementById('log2').textContent = 'Marcados: ' + (checked.join(', ') || '(ninguno)');
+    };
+
+    window.expandAll = (id) => {
+        document.getElementById(id).querySelectorAll('vcl-treenode').forEach(n => {
+            n.setAttribute('expanded', '');
+        });
+    };
+
+    window.collapseAll = (id) => {
+        document.getElementById(id).querySelectorAll('vcl-treenode').forEach(n => {
+            n.removeAttribute('expanded');
+        });
+    };
+</script>
+</body>
+</html>

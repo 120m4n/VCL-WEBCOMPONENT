@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-progressbar&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc; color: #1a202c;
+        }
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #4c1d95 100%);
+            color: #fff; padding: 28px 32px; border-radius: 14px;
+            margin-bottom: 28px; box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #c4b5fd; font-size: 14px; }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 {
+            margin: 0 0 20px; font-size: 16px; font-weight: 600; color: #374151;
+            border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
+        }
+        .row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .row label { font-size: 12px; font-weight: 600; color: #6b7280; min-width: 130px; }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+        button {
+            padding: 7px 14px; font-size: 12.5px; font-weight: 500;
+            border-radius: 6px; border: 1px solid #d1d5db; background: #fff;
+            cursor: pointer; transition: all 0.15s; font-family: inherit; color: #374151;
+        }
+        button:hover { background: #f3f4f6; border-color: #9ca3af; }
+        button.primary { background: #3b82f6; color: #fff; border-color: #2563eb; }
+        button.primary:hover { background: #2563eb; }
+        .vertical-demo { display: flex; gap: 16px; align-items: flex-end; height: 140px; }
+        .vertical-demo vcl-progressbar { width: 24px; height: 140px; }
+        pre {
+            background: #1e293b; color: #e2e8f0; padding: 14px 16px;
+            border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; line-height: 1.6; overflow-x: auto; margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>🟣 &lt;vcl-progressbar&gt;</h1>
+    <p>Port de <code>TProgressBar</code> · Delphi 4 comctrls.pas</p>
+</div>
+
+<!-- ── Test 1: Estilos de color ──────────────────────────────────────────── -->
+<div class="card">
+    <h2>1. Estilos de barra (<code>bar-style</code>)</h2>
+    <div class="row">
+        <label>primary (default)</label>
+        <vcl-progressbar id="pb-primary" position="65" show-label style="flex:1"></vcl-progressbar>
+    </div>
+    <div class="row">
+        <label>success</label>
+        <vcl-progressbar id="pb-success" position="80" bar-style="success" show-label style="flex:1"></vcl-progressbar>
+    </div>
+    <div class="row">
+        <label>warning</label>
+        <vcl-progressbar id="pb-warning" position="45" bar-style="warning" show-label style="flex:1"></vcl-progressbar>
+    </div>
+    <div class="row">
+        <label>danger</label>
+        <vcl-progressbar id="pb-danger" position="25" bar-style="danger" show-label style="flex:1"></vcl-progressbar>
+    </div>
+</div>
+
+<!-- ── Test 2: Interactivo ───────────────────────────────────────────────── -->
+<div class="card">
+    <h2>2. Control interactivo</h2>
+    <vcl-progressbar id="pb-main" position="0" show-label style="margin-bottom:16px"></vcl-progressbar>
+    <div class="controls">
+        <button onclick="document.getElementById('pb-main').stepIt()">stepIt() (+10)</button>
+        <button onclick="document.getElementById('pb-main').reset()">reset()</button>
+        <button class="primary" onclick="startDemo()">▶ Demo animada</button>
+        <button onclick="stopDemo()">⏹ Parar</button>
+    </div>
+    <div class="controls" style="margin-top:8px">
+        <button onclick="document.getElementById('pb-main').barStyle='primary'">primary</button>
+        <button onclick="document.getElementById('pb-main').barStyle='success'">success</button>
+        <button onclick="document.getElementById('pb-main').barStyle='warning'">warning</button>
+        <button onclick="document.getElementById('pb-main').barStyle='danger'">danger</button>
+    </div>
+</div>
+
+<!-- ── Test 3: Indeterminado ─────────────────────────────────────────────── -->
+<div class="card">
+    <h2>3. Modo indeterminado (<code>indeterminate</code>)</h2>
+    <vcl-progressbar id="pb-ind" indeterminate style="margin-bottom:12px"></vcl-progressbar>
+    <div class="controls">
+        <button onclick="document.getElementById('pb-ind').indeterminate=true">Activar</button>
+        <button onclick="document.getElementById('pb-ind').indeterminate=false;document.getElementById('pb-ind').position=50">Desactivar</button>
+    </div>
+</div>
+
+<!-- ── Test 4: Vertical ──────────────────────────────────────────────────── -->
+<div class="card">
+    <h2>4. Orientación vertical</h2>
+    <div class="vertical-demo">
+        <vcl-progressbar orientation="vertical" position="30" bar-style="primary" show-label></vcl-progressbar>
+        <vcl-progressbar orientation="vertical" position="60" bar-style="success"></vcl-progressbar>
+        <vcl-progressbar orientation="vertical" position="85" bar-style="warning"></vcl-progressbar>
+        <vcl-progressbar orientation="vertical" position="15" bar-style="danger"></vcl-progressbar>
+        <vcl-progressbar orientation="vertical" indeterminate bar-style="primary"></vcl-progressbar>
+    </div>
+</div>
+
+<!-- ── Test 5: Disabled ──────────────────────────────────────────────────── -->
+<div class="card">
+    <h2>5. Estado disabled</h2>
+    <vcl-progressbar id="pb-dis" position="55" bar-style="success" show-label disabled></vcl-progressbar>
+</div>
+
+<!-- ── Referencia ────────────────────────────────────────────────────────── -->
+<div class="card">
+    <h2>Referencia de código</h2>
+    <pre>&lt;vcl-progressbar position="65" show-label bar-style="success"&gt;&lt;/vcl-progressbar&gt;
+&lt;vcl-progressbar indeterminate&gt;&lt;/vcl-progressbar&gt;
+&lt;vcl-progressbar orientation="vertical" position="75"&gt;&lt;/vcl-progressbar&gt;
+
+// JavaScript API
+pb.stepIt();       // position += step (default 10)
+pb.reset();        // position = min
+pb.position = 50;
+pb.indeterminate = true;
+pb.barStyle = 'success' | 'warning' | 'danger' | 'primary';</pre>
+</div>
+
+<script type="module">
+    import '../web-components/index.ts';
+
+    let demoTimer = null;
+
+    window.startDemo = () => {
+        const pb = document.getElementById('pb-main');
+        pb.reset();
+        if (demoTimer) clearInterval(demoTimer);
+        demoTimer = setInterval(() => {
+            if (pb.position >= pb.max) {
+                clearInterval(demoTimer);
+                pb.barStyle = 'success';
+                return;
+            }
+            pb.position += 2;
+        }, 60);
+    };
+
+    window.stopDemo = () => {
+        clearInterval(demoTimer);
+    };
+</script>
+</body>
+</html>

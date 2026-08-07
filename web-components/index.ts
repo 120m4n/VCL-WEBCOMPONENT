@@ -37,4 +37,7 @@ export { VCLNavBar, VCLSideBar } from './components/navigation/vcl-navigation';
 export { VCLWell } from './components/well/vcl-well';
 export { VCLToolBar } from './components/toolbar/vcl-toolbar';
 export { VCLToolButton } from './components/toolbar/vcl-toolbutton';
-
+export { VCLStatusBar, VCLStatusPanel } from './components/statusbar/vcl-statusbar';
+export { VCLProgressBar } from './components/progressbar/vcl-progressbar';
+export { VCLTreeView, VCLTreeNode } from './components/treeview/vcl-treeview';
+export { VCLListView, VCLListColumn } from './components/listview/vcl-listview';

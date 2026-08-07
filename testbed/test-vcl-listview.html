@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-listview&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc; color: #1a202c;
+        }
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #7c2d12 100%);
+            color: #fff; padding: 28px 32px; border-radius: 14px;
+            margin-bottom: 28px; box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #fed7aa; font-size: 14px; }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 {
+            margin: 0 0 16px; font-size: 16px; font-weight: 600; color: #374151;
+            border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
+        }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        button {
+            padding: 7px 14px; font-size: 12.5px; font-weight: 500;
+            border-radius: 6px; border: 1px solid #d1d5db; background: #fff;
+            cursor: pointer; transition: all 0.15s; font-family: inherit; color: #374151;
+        }
+        button:hover { background: #f3f4f6; }
+        button.primary { background: #3b82f6; color: #fff; border-color: #2563eb; }
+        button.primary:hover { background: #2563eb; }
+        button.danger  { background: #ef4444; color: #fff; border-color: #dc2626; }
+        .log {
+            background: #0f172a; color: #4ade80; padding: 10px 14px;
+            border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; min-height: 36px; margin-top: 12px;
+        }
+        pre {
+            background: #1e293b; color: #e2e8f0; padding: 14px 16px;
+            border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; line-height: 1.6; overflow-x: auto; margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>📋 &lt;vcl-listview&gt; &amp; &lt;vcl-listcolumn&gt;</h1>
+    <p>Port de <code>TListView / TListColumn</code> · Delphi 4 comctrls.pas · Report / Icon / List / Small-icon</p>
+</div>
+
+<!-- ── Test 1: Report view con ordenamiento ───────────────────────────────── -->
+<div class="card">
+    <h2>1. Vista Reporte con columnas ordenables (<code>sortable</code>)</h2>
+    <vcl-listview id="lv1" sortable checkboxes style="height:260px">
+        <vcl-listcolumn slot="columns" caption="Nombre"       width="200px" sortable></vcl-listcolumn>
+        <vcl-listcolumn slot="columns" caption="Tipo"         width="100px"></vcl-listcolumn>
+        <vcl-listcolumn slot="columns" caption="Tamaño (KB)"  width="110px" alignment="right" sortable></vcl-listcolumn>
+        <vcl-listcolumn slot="columns" caption="Modificado"   width="140px"></vcl-listcolumn>
+        <vcl-listcolumn slot="columns" caption="Estado"       width="100px"></vcl-listcolumn>
+    </vcl-listview>
+    <div class="controls">
+        <button class="primary" onclick="loadFiles()">Cargar archivos demo</button>
+        <button onclick="getSelected()">Obtener seleccionados</button>
+        <button class="danger" onclick="document.getElementById('lv1').clear()">Limpiar</button>
+    </div>
+    <div class="log" id="log1">Haz clic en "Cargar archivos demo"...</div>
+</div>
+
+<!-- ── Test 2: Multi-select sin checkboxes ────────────────────────────────── -->
+<div class="card">
+    <h2>2. Multi-select sin checkboxes · Vistas intercambiables</h2>
+    <vcl-listview id="lv2" multi-select style="height:240px">
+        <vcl-listcolumn slot="columns" caption="Producto"   width="180px" sortable></vcl-listcolumn>
+        <vcl-listcolumn slot="columns" caption="Categoría"  width="130px" sortable></vcl-listcolumn>
+        <vcl-listcolumn slot="columns" caption="Precio"     width="100px" alignment="right" sortable></vcl-listcolumn>
+        <vcl-listcolumn slot="columns" caption="Stock"      width="80px"  alignment="center"></vcl-listcolumn>
+    </vcl-listview>
+    <div class="controls">
+        <button class="primary" onclick="loadProducts()">Cargar productos</button>
+        <button onclick="document.getElementById('lv2').viewStyle='report'">⊞ Report</button>
+        <button onclick="document.getElementById('lv2').viewStyle='list'">☰ List</button>
+        <button onclick="document.getElementById('lv2').viewStyle='icon'">⊠ Icons</button>
+        <button onclick="document.getElementById('lv2').viewStyle='small-icon'">⊟ Small</button>
+    </div>
+    <div class="log" id="log2">Cambia la vista con los botones...</div>
+</div>
+
+<!-- ── Test 3: Disabled ──────────────────────────────────────────────────── -->
+<div class="card">
+    <h2>3. Estado disabled</h2>
+    <vcl-listview id="lv3" disabled style="height:160px">
+        <vcl-listcolumn slot="columns" caption="Columna A" width="200px"></vcl-listcolumn>
+        <vcl-listcolumn slot="columns" caption="Columna B" width="150px"></vcl-listcolumn>
+    </vcl-listview>
+    <div class="controls">
+        <button onclick="document.getElementById('lv3').disabled=true">Deshabilitar</button>
+        <button onclick="document.getElementById('lv3').disabled=false">Habilitar</button>
+        <button onclick="document.getElementById('lv3').addItem(['Fila de prueba','Valor B'],'📁')">+ Agregar fila</button>
+    </div>
+</div>
+
+<!-- ── Referencia ────────────────────────────────────────────────────────── -->
+<div class="card">
+    <h2>Referencia de código</h2>
+    <pre>&lt;vcl-listview sortable multi-select checkboxes&gt;
+  &lt;vcl-listcolumn slot="columns" caption="Nombre" width="200px" sortable&gt;&lt;/vcl-listcolumn&gt;
+  &lt;vcl-listcolumn slot="columns" caption="Tamaño" width="100px" alignment="right"&gt;&lt;/vcl-listcolumn&gt;
+&lt;/vcl-listview&gt;
+
+// JavaScript API
+lv.addItem(['archivo.ts', '12'], '📄');   // Agrega una fila
+lv.clear();                               // Elimina todas las filas
+lv.getSelectedRows();                     // → HTMLTableRowElement[]
+lv.viewStyle = 'report' | 'list' | 'icon' | 'small-icon';
+
+// Eventos
+lv.addEventListener('vcl-sort', e => console.log(e.detail.columnIndex, e.detail.ascending));</pre>
+</div>
+
+<script type="module">
+    import '../web-components/index.ts';
+
+    const fileData = [
+        ['vcl-toolbar.ts',    'TypeScript', '9.2',  '06/08/2026 08:12', '✅ OK'],
+        ['vcl-statusbar.ts',  'TypeScript', '7.8',  '06/08/2026 09:45', '✅ OK'],
+        ['vcl-progressbar.ts','TypeScript', '6.1',  '06/08/2026 10:30', '✅ OK'],
+        ['vcl-treeview.ts',   'TypeScript', '12.4', '06/08/2026 11:00', '✅ OK'],
+        ['vcl-listview.ts',   'TypeScript', '14.7', '06/08/2026 11:15', '✅ OK'],
+        ['index.ts',          'TypeScript', '2.3',  '06/08/2026 11:20', '✅ OK'],
+        ['vite.config.ts',    'Config',     '0.5',  '01/08/2026 09:00', '✅ OK'],
+        ['package.json',      'JSON',       '0.4',  '01/08/2026 09:00', '✅ OK'],
+        ['README.md',         'Markdown',   '2.5',  '05/08/2026 17:30', '📝 Editar'],
+    ];
+
+    const productData = [
+        ['Laptop Pro X1',   'Electrónica', '$24,999', '15'],
+        ['Monitor 27" 4K',  'Electrónica', '$8,500',  '8'],
+        ['Teclado mecánico','Periférico',  '$2,200',  '32'],
+        ['Mouse inalámbrico','Periférico', '$980',    '47'],
+        ['Silla ergonómica','Muebles',    '$6,800',   '5'],
+        ['Escritorio L',    'Muebles',    '$12,500',  '3'],
+        ['Audífonos BT',    'Audio',      '$3,400',   '18'],
+        ['Cámara web 4K',   'Video',      '$4,100',   '11'],
+    ];
+
+    const fileIcons = { TypeScript: '📄', Config: '⚙️', JSON: '{}', Markdown: '📝' };
+    const productIcons = { 'Electrónica': '💻', 'Periférico': '🖱️', 'Muebles': '🪑', 'Audio': '🎧', 'Video': '📷' };
+
+    window.loadFiles = () => {
+        const lv = document.getElementById('lv1');
+        lv.clear();
+        fileData.forEach(row => lv.addItem(row, fileIcons[row[1]] || '📄'));
+        document.getElementById('log1').textContent = `${fileData.length} archivos cargados. Click en columna para ordenar.`;
+    };
+
+    window.loadProducts = () => {
+        const lv = document.getElementById('lv2');
+        lv.clear();
+        productData.forEach(row => lv.addItem(row, productIcons[row[1]] || '📦'));
+        document.getElementById('log2').textContent = `${productData.length} productos cargados.`;
+    };
+
+    window.getSelected = () => {
+        const lv = document.getElementById('lv1');
+        const rows = lv.getSelectedRows();
+        const names = rows.map(r => r.cells[1]?.textContent || '');
+        document.getElementById('log1').textContent = `Seleccionados (${rows.length}): ${names.join(', ') || '(ninguno)'}`;
+    };
+
+    document.addEventListener('vcl-sort', (e) => {
+        const log = e.target.closest('#lv1') ? 'log1' : 'log2';
+        const logEl = document.getElementById(log);
+        if (logEl) {
+            logEl.textContent = `vcl-sort → col[${e.detail.columnIndex}] "${e.detail.column?.caption}" ${e.detail.ascending ? '▲ ASC' : '▼ DESC'}`;
+        }
+    });
+</script>
+</body>
+</html>

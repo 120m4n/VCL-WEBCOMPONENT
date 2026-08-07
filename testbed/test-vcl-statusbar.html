@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCL.JS — Test &lt;vcl-statusbar&gt; &amp; &lt;vcl-statuspanel&gt;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --primary: #3b82f6;
+            --code-bg: #1e293b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: #1a202c;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+            color: #fff;
+            padding: 28px 32px;
+            border-radius: 14px;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 32px -6px rgba(0,0,0,0.2);
+        }
+
+        .hero h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .hero p  { margin: 6px 0 0; color: #94a3b8; font-size: 14px; }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .card h2 {
+            margin: 0 0 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .demo-host {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            min-height: 120px;
+            margin-bottom: 16px;
+        }
+
+        .demo-body {
+            flex: 1;
+            padding: 16px;
+            background: #f8fafc;
+            font-size: 13px;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        button {
+            padding: 7px 14px;
+            font-size: 12.5px;
+            font-weight: 500;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+            color: #374151;
+        }
+
+        button:hover { background: #f3f4f6; border-color: #9ca3af; }
+        button.primary { background: #3b82f6; color: #fff; border-color: #2563eb; }
+        button.primary:hover { background: #2563eb; }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .log {
+            background: #0f172a;
+            color: #4ade80;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            min-height: 44px;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>🔵 &lt;vcl-statusbar&gt; &amp; &lt;vcl-statuspanel&gt;</h1>
+    <p>Port de <code>TStatusBar / TStatusPanel</code> · Delphi 4 comctrls.pas</p>
+</div>
+
+<!-- ── Test 1: Múltiples paneles ─────────────────────────────────────────── -->
+<div class="card">
+    <h2>1. Múltiples paneles con bisel</h2>
+    <div class="demo-host">
+        <div class="demo-body">Área de contenido principal</div>
+        <vcl-statusbar id="sb1" size-grip>
+            <vcl-statuspanel id="sp-ready" text="✅ Listo" width="100px"></vcl-statuspanel>
+            <vcl-statuspanel id="sp-file"  text="📄 sin_titulo.vcl" spring></vcl-statuspanel>
+            <vcl-statuspanel id="sp-pos"   text="Ln 1, Col 1" width="110px" alignment="center"></vcl-statuspanel>
+            <vcl-statuspanel id="sp-enc"   text="UTF-8" width="70px" alignment="center" bevel="raised"></vcl-statuspanel>
+            <vcl-statuspanel id="sp-time"  text="00:00:00" width="80px" alignment="right" bevel="none"></vcl-statuspanel>
+        </vcl-statusbar>
+    </div>
+    <div class="controls">
+        <button onclick="document.getElementById('sp-ready').text='⏳ Procesando...'">Procesando</button>
+        <button onclick="document.getElementById('sp-ready').text='✅ Listo'">Listo</button>
+        <button onclick="document.getElementById('sp-file').text='📄 proyecto.vcl'">Cambiar archivo</button>
+        <button onclick="startClock()">▶ Reloj</button>
+        <button onclick="stopClock()">⏹ Parar</button>
+    </div>
+    <div class="log" id="log1">Click en un panel para ver eventos...</div>
+</div>
+
+<!-- ── Test 2: Modo simple-panel ─────────────────────────────────────────── -->
+<div class="card">
+    <h2>2. Modo <code>simple-panel</code> (texto único)</h2>
+    <div class="demo-host">
+        <div class="demo-body">Formulario de datos</div>
+        <vcl-statusbar id="sb2" simple-panel simple-text="📋 Formulario en modo edición">
+            <vcl-statuspanel text="Panel A" width="120px"></vcl-statuspanel>
+            <vcl-statuspanel text="Panel B" spring></vcl-statuspanel>
+        </vcl-statusbar>
+    </div>
+    <div class="controls">
+        <button onclick="document.getElementById('sb2').simplePanel=true">Simple</button>
+        <button onclick="document.getElementById('sb2').simplePanel=false">Multi-panel</button>
+        <button onclick="document.getElementById('sb2').simpleText='💾 Guardado correctamente'">Mensaje guardado</button>
+        <button onclick="document.getElementById('sb2').simpleText='❌ Error al guardar'">Error</button>
+    </div>
+</div>
+
+<!-- ── Test 3: Sin size-grip / distintos bevels ───────────────────────────── -->
+<div class="card">
+    <h2>3. Comparativa de estilos de bevel</h2>
+    <div class="demo-host">
+        <div class="demo-body">Comparativa de bordes</div>
+        <vcl-statusbar>
+            <vcl-statuspanel text="lowered (default)" width="160px"></vcl-statuspanel>
+            <vcl-statuspanel text="raised" width="120px" bevel="raised"></vcl-statuspanel>
+            <vcl-statuspanel text="none" spring bevel="none"></vcl-statuspanel>
+        </vcl-statusbar>
+    </div>
+</div>
+
+<!-- ── Referencia de código ───────────────────────────────────────────────── -->
+<div class="card">
+    <h2>Referencia de código</h2>
+    <pre>&lt;vcl-statusbar size-grip&gt;
+  &lt;vcl-statuspanel text="✅ Listo" width="100px"&gt;&lt;/vcl-statuspanel&gt;
+  &lt;vcl-statuspanel text="archivo.vcl" spring&gt;&lt;/vcl-statuspanel&gt;
+  &lt;vcl-statuspanel text="UTF-8" width="70px" alignment="center" bevel="raised"&gt;&lt;/vcl-statuspanel&gt;
+&lt;/vcl-statusbar&gt;
+
+// JavaScript API
+bar.simplePanel = true;
+bar.simpleText  = "Mensaje de estado";
+panel.text      = "Nuevo texto";
+panel.bevel     = "raised" | "lowered" | "none";</pre>
+</div>
+
+<script type="module">
+    import '../web-components/index.ts';
+
+    // ── Clock demo
+    let clockTimer = null;
+
+    window.startClock = () => {
+        if (clockTimer) return;
+        const el = document.getElementById('sp-time');
+        clockTimer = setInterval(() => {
+            const now = new Date();
+            el.text = now.toLocaleTimeString('es-MX');
+        }, 1000);
+    };
+
+    window.stopClock = () => {
+        clearInterval(clockTimer);
+        clockTimer = null;
+    };
+
+    // ── Panel click events
+    document.addEventListener('vcl-panel-click', (e) => {
+        const log = document.getElementById('log1');
+        log.textContent = `vcl-panel-click → panel.text = "${e.detail.text}"`;
+    });
+</script>
+</body>
+</html>
